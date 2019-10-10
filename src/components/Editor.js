@@ -1,7 +1,28 @@
 import React, { useState } from 'react';
-import { Editor, EditorState, RichUtils } from 'draft-js';
+import { EditorState, RichUtils } from 'draft-js';
+import Editor, { composeDecorators } from 'draft-js-plugins-editor';
+import createInlineToolbarPlugin from 'draft-js-inline-toolbar-plugin';
+import createLinkPlugin from 'draft-js-anchor-plugin';
+import { ItalicButton, BoldButton, UnderlineButton } from 'draft-js-buttons';
+
+import { mediaBlockRenderer } from './entities/mediaBlockRenderer';
 
 import 'draft-js/dist/Draft.css';
+import 'draft-js-inline-toolbar-plugin/lib/plugin.css';
+
+// ADDING LINK
+const linkPlugin = createLinkPlugin({
+  placeholder: 'https://...'
+});
+// INLINE TOOLBAR
+//  At this step, a configuration object can be passed in as an argument.
+const inlineToolbarPlugin = createInlineToolbarPlugin({
+  structure: [BoldButton, ItalicButton, UnderlineButton, linkPlugin.LinkButton]
+});
+const { InlineToolbar } = inlineToolbarPlugin;
+
+// plugins list
+const plugins = [inlineToolbarPlugin, linkPlugin];
 
 const EditorComp = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -25,9 +46,7 @@ const EditorComp = () => {
     return 'not-handled';
   };
 
-  /**
-   * Styling controls
-   */
+  //  Styling controls
 
   // BOLD
   const onBoldclick = () => {
@@ -69,6 +88,70 @@ const EditorComp = () => {
     setEditorState(RichUtils.toggleInlineStyle(editorState, 'SUBSCRIPT'));
   };
 
+  // BLOCKSTYLES
+  function myBlockStyleFn(contentBlock) {
+    const type = contentBlock.getType();
+    switch (type) {
+      default:
+        return;
+
+      case 'blockquote':
+        return 'my-blockquote';
+
+      case 'code-block':
+        return 'my-codeblock';
+    }
+  }
+  // HEADERS
+  const onH1Click = () => {
+    setEditorState(RichUtils.toggleBlockType(editorState, 'header-one'));
+  };
+  const onH2Click = () => {
+    setEditorState(RichUtils.toggleBlockType(editorState, 'header-two'));
+  };
+  const onH3Click = () => {
+    setEditorState(RichUtils.toggleBlockType(editorState, 'header-three'));
+  };
+  const onH4Click = () => {
+    setEditorState(RichUtils.toggleBlockType(editorState, 'header-four'));
+  };
+  const onH5Click = () => {
+    setEditorState(RichUtils.toggleBlockType(editorState, 'header-five'));
+  };
+  const onH6Click = () => {
+    setEditorState(RichUtils.toggleBlockType(editorState, 'header-six'));
+  };
+
+  // BLOCKQUOTE
+  const onBlockquoteClick = () => {
+    setEditorState(RichUtils.toggleBlockType(editorState, 'blockquote'));
+  };
+
+  // CODE BLOCK
+  const onCodeBlockClick = () => {
+    setEditorState(RichUtils.toggleBlockType(editorState, 'code-block'));
+  };
+
+  // LISTS
+  const onOLClick = () => {
+    setEditorState(RichUtils.toggleBlockType(editorState, 'ordered-list-item'));
+  };
+  const onULClick = () => {
+    setEditorState(
+      RichUtils.toggleBlockType(editorState, 'unordered-list-item')
+    );
+  };
+
+  const onTab = e => {
+    const maxDepth = 5;
+    setEditorState(RichUtils.onTab(e, editorState, maxDepth));
+  };
+
+  // IMAGE
+  const onImageClick = () => {
+    setEditorState(RichUtils.toggleBlockType(editorState, 'atomic'));
+  };
+
   // custom inline styles
   const styleMap = {
     STRIKETHROUGH: {
@@ -90,6 +173,12 @@ const EditorComp = () => {
     SUBSCRIPT: {
       verticalAlign: 'sub',
       fontSize: 'smaller'
+    },
+    blockquote: {
+      color: ' #ddd',
+      fontStyle: ' italic',
+      textAlign: ' center',
+      borderLeft: ' 5px solid #888'
     }
   };
 
@@ -143,13 +232,69 @@ const EditorComp = () => {
             X<sub>2</sub>
           </button>
         </div>
+        <div className="block-styles">
+          <div className="headers">
+            <button className="h1-btn" onClick={onH1Click}>
+              H1
+            </button>
+            <button className="h1-btn" onClick={onH2Click}>
+              H2
+            </button>
+            <button className="h1-btn" onClick={onH3Click}>
+              H3
+            </button>
+            <button className="h1-btn" onClick={onH4Click}>
+              H4
+            </button>
+            <button className="h1-btn" onClick={onH5Click}>
+              H5
+            </button>
+            <button className="h1-btn" onClick={onH6Click}>
+              H6
+            </button>
+          </div>
+          <button className="blockquote-btn" onClick={onBlockquoteClick}>
+            <i className="fas fa-quote-right"></i>
+          </button>
+          <button className="codeblock-btn" onClick={onCodeBlockClick}>
+            code
+          </button>
+
+          <button className="ordered-btn" onClick={onOLClick}>
+            <i className="fas fa-list-ol"></i>
+          </button>
+          <button className="ordered-btn" onClick={onULClick}>
+            <i className="fas fa-list"></i>
+          </button>
+
+          <button className="image-btn" onClick={onImageClick}>
+            <i className="far fa-image"></i>
+          </button>
+        </div>
       </div>
       <Editor
         editorState={editorState}
         handleKeyCommand={handleKeyCommand}
         customStyleMap={styleMap}
+        plugins={plugins}
+        blockStyleFn={myBlockStyleFn}
+        onTab={onTab}
+        blockRendererFn={mediaBlockRenderer}
         onChange={setEditorState}
+        placeholder="Whats on your mind?"
+        spellCheck={true}
       />
+      <InlineToolbar>
+        {// may be use React.Fragment instead of div to improve perfomance after React 16
+        externalProps => (
+          <div>
+            <BoldButton {...externalProps} />
+            <ItalicButton {...externalProps} />
+            <UnderlineButton {...externalProps} />
+            <linkPlugin.LinkButton {...externalProps} />
+          </div>
+        )}
+      </InlineToolbar>
     </div>
   );
 };
