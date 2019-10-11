@@ -1,5 +1,5 @@
-import React, { useState, Fragment } from 'react';
-import { EditorState, RichUtils } from 'draft-js';
+import React, { useState, useEffect, Fragment, createRef } from 'react';
+import { EditorState, RichUtils, AtomicBlockUtils } from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
 import createInlineToolbarPlugin from 'draft-js-inline-toolbar-plugin';
 import createLinkPlugin from 'draft-js-anchor-plugin';
@@ -10,6 +10,8 @@ import { ItalicButton, BoldButton, UnderlineButton } from 'draft-js-buttons';
 
 import 'draft-js/dist/Draft.css';
 import 'draft-js-inline-toolbar-plugin/lib/plugin.css';
+
+import { mediaBlockRenderer } from './entities/mediaBlockRenderer';
 
 // ADDING LINK
 const linkPlugin = createLinkPlugin({
@@ -41,6 +43,17 @@ const imagePlugin = createImagePlugin();
 
 // plugins list
 const plugins = [inlineToolbarPlugin, linkPlugin, undoPlugin, imagePlugin];
+
+// editor ref
+const editorRef = createRef();
+
+// focus function to programatically activate editor through ref
+// const focus = () => editorRef.focus();
+
+/* This function is passsed as a callback in the event listener responsible for adding the image
+
+focus() is called once our EditorState has finished updating. This way, users will be able to immediately resume entering (or deleting) text upon the addition of the image.
+*/
 
 const EditorComp = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -207,6 +220,36 @@ const EditorComp = () => {
     }
   };
 
+  // useEffect(() => {
+  //   console.log(editorRef);
+  //   setTimeout(() => focus(), 0);
+  // });
+
+  // The functionality for embedding images
+  const onAddImage = e => {
+    e.preventDefault();
+    // image input
+    const urlValue = window.prompt('Paste image link');
+    const contentState = editorState.getCurrentContent();
+
+    // add entity to contentState
+    const contentStateWithEntity = contentState.createEntity(
+      'image',
+      'IMMUTABLE',
+      { src: urlValue }
+    ); // these are the metadata made available to the Media component in the custome block renderer
+
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+    const newEditorState = EditorState.set(
+      editorState,
+      { currentContent: contentStateWithEntity },
+      'create-entity'
+    );
+    setEditorState(
+      AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, ' ')
+    );
+  };
+
   return (
     <div className="editor-wrapper">
       <div className="editor-tools">
@@ -309,19 +352,25 @@ const EditorComp = () => {
           <button className="style-btn ordered-btn" onClick={onULClick}>
             <i className="fas fa-list"></i>
           </button>
+          <button className="style-btn add-image-btn" onClick={onAddImage}>
+            <i className="far fa-image"></i>
+          </button>
         </div>
       </div>
       <div className="editor-container">
+        {/* The blockRendererFn props renders the default DraftEditorBlock text block if no custome rendere is defined */}
         <Editor
           editorState={editorState}
           handleKeyCommand={handleKeyCommand}
           customStyleMap={styleMap}
           plugins={plugins}
+          blockRendererFn={mediaBlockRenderer}
           blockStyleFn={myBlockStyleFn}
           onTab={onTab}
           onChange={setEditorState}
           placeholder="Whats on your mind?"
           spellCheck={true}
+          ref={editorRef}
         />
         <InlineToolbar>
           {// may be use React.Fragment instead of div to improve perfomance after React 16
