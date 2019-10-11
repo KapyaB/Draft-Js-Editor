@@ -5,11 +5,13 @@ import createInlineToolbarPlugin from 'draft-js-inline-toolbar-plugin';
 import createLinkPlugin from 'draft-js-anchor-plugin';
 import createUndoPlugin from 'draft-js-undo-plugin';
 import createCounterPlugin from 'draft-js-counter-plugin';
+import createEmojiPlugin from 'draft-js-emoji-plugin';
 
 import { ItalicButton, BoldButton, UnderlineButton } from 'draft-js-buttons';
 
 import 'draft-js/dist/Draft.css';
 import 'draft-js-inline-toolbar-plugin/lib/plugin.css';
+import 'draft-js-emoji-plugin/lib/plugin.css';
 
 import { mediaBlockRenderer } from './entities/mediaBlockRenderer';
 
@@ -45,8 +47,20 @@ const { UndoButton, RedoButton } = undoPlugin;
 const counterPlugin = createCounterPlugin({ theme });
 const { CharCounter, WordCounter, LineCounter } = counterPlugin;
 
+// EMOJIS
+const emojiPlugin = createEmojiPlugin({
+  useNativeArt: false
+});
+const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
+
 // plugins list
-const plugins = [inlineToolbarPlugin, linkPlugin, undoPlugin, counterPlugin];
+const plugins = [
+  inlineToolbarPlugin,
+  linkPlugin,
+  undoPlugin,
+  counterPlugin,
+  emojiPlugin
+];
 
 // editor ref
 const editorRef = createRef();
@@ -387,6 +401,7 @@ const EditorComp = () => {
             </Fragment>
           )}
         </InlineToolbar>
+        <EmojiSuggestions />
         <div className="counters-wrapper">
           <div className="counter-container">
             <CharCounter limit={200} /> characters
@@ -397,6 +412,9 @@ const EditorComp = () => {
           <div className="counter-container">
             <LineCounter limit={10} /> lines
           </div>
+        </div>
+        <div className="emoji-selection">
+          <EmojiSelect />
         </div>
       </div>
     </div>
