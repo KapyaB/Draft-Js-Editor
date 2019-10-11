@@ -4,7 +4,6 @@ import Editor from 'draft-js-plugins-editor';
 import createInlineToolbarPlugin from 'draft-js-inline-toolbar-plugin';
 import createLinkPlugin from 'draft-js-anchor-plugin';
 import createUndoPlugin from 'draft-js-undo-plugin';
-import createImagePlugin from 'draft-js-image-plugin';
 
 import { ItalicButton, BoldButton, UnderlineButton } from 'draft-js-buttons';
 
@@ -38,17 +37,16 @@ const undoPlugin = createUndoPlugin({
 });
 const { UndoButton, RedoButton } = undoPlugin;
 
-// IMAGE
-const imagePlugin = createImagePlugin();
-
 // plugins list
-const plugins = [inlineToolbarPlugin, linkPlugin, undoPlugin, imagePlugin];
+const plugins = [inlineToolbarPlugin, linkPlugin, undoPlugin];
 
 // editor ref
 const editorRef = createRef();
 
 // focus function to programatically activate editor through ref
-// const focus = () => editorRef.focus();
+const focus = () => {
+  editorRef && editorRef.current.focus();
+};
 
 /* This function is passsed as a callback in the event listener responsible for adding the image
 
@@ -85,7 +83,6 @@ const EditorComp = () => {
   // BOLD
   const onBoldclick = () => {
     setEditorState(RichUtils.toggleInlineStyle(editorState, 'BOLD'));
-    console.log(editorState);
     if (activeBtns.indexOf('bold') !== -1) {
       /* remove style */
       setActiveBtns(activeBtns.filter(btn => btn !== 'bold'));
@@ -220,10 +217,9 @@ const EditorComp = () => {
     }
   };
 
-  // useEffect(() => {
-  //   console.log(editorRef);
-  //   setTimeout(() => focus(), 0);
-  // });
+  useEffect(() => {
+    setTimeout(() => focus(), 0);
+  });
 
   // The functionality for embedding images
   const onAddImage = e => {

@@ -12,6 +12,12 @@ pre {
     monospace
 }
 
+/*  */
+figure {
+  width: fit-content;
+  margin: auto;
+}
+
 .my-blockquote {
   color: #555;
   font-style: italic;
