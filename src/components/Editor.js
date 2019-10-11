@@ -4,6 +4,7 @@ import Editor from 'draft-js-plugins-editor';
 import createInlineToolbarPlugin from 'draft-js-inline-toolbar-plugin';
 import createLinkPlugin from 'draft-js-anchor-plugin';
 import createUndoPlugin from 'draft-js-undo-plugin';
+import createCounterPlugin from 'draft-js-counter-plugin';
 
 import { ItalicButton, BoldButton, UnderlineButton } from 'draft-js-buttons';
 
@@ -24,12 +25,15 @@ const inlineToolbarPlugin = createInlineToolbarPlugin({
 });
 const { InlineToolbar } = inlineToolbarPlugin;
 
-// UNDO REDO
+// CUSTOM PLUGIN THEME
 const theme = {
   undo: 'style-btn',
-  redo: 'style-btn'
+  redo: 'style-btn',
+  counter: 'counter',
+  counterOverLimit: 'counter-overLimit'
 };
 
+// UNDO REDO
 const undoPlugin = createUndoPlugin({
   undoContent: 'Undo',
   redoContent: 'Redo',
@@ -37,8 +41,12 @@ const undoPlugin = createUndoPlugin({
 });
 const { UndoButton, RedoButton } = undoPlugin;
 
+// COUNTERS
+const counterPlugin = createCounterPlugin({ theme });
+const { CharCounter, WordCounter, LineCounter } = counterPlugin;
+
 // plugins list
-const plugins = [inlineToolbarPlugin, linkPlugin, undoPlugin];
+const plugins = [inlineToolbarPlugin, linkPlugin, undoPlugin, counterPlugin];
 
 // editor ref
 const editorRef = createRef();
@@ -379,6 +387,17 @@ const EditorComp = () => {
             </Fragment>
           )}
         </InlineToolbar>
+        <div className="counters-wrapper">
+          <div className="counter-container">
+            <CharCounter limit={200} /> characters
+          </div>
+          <div className="counter-container">
+            <WordCounter limit={30} /> words
+          </div>
+          <div className="counter-container">
+            <LineCounter limit={10} /> lines
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ pre {
     monospace
 }
 
-/*  */
+/* embedded images */
 figure {
   width: fit-content;
   margin: auto;
@@ -105,4 +105,26 @@ figure {
   padding: 0.5rem;
   margin: 1rem 0 0 0;
   border-top: 1px solid;
+}
+
+/* counters */
+.counters-wrapper {
+  display: flex;
+  width: 50%;
+  justify-content: space-between;
+  padding: 0.25rem;
+  border: #53535388 1px solid;
+  margin: auto;
+  border-radius: 5px;
+}
+
+.counter {
+  color: #00c927;
+  padding: 0.25rem;
+  border-radius: 5px;
+  margin: 0.2rem;
+}
+
+.counter-overLimit {
+  color: #ff1a1a;
 }
