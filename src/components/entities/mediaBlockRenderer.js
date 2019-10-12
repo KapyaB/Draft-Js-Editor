@@ -28,7 +28,17 @@ export const mediaBlockRenderer = block => {
  */
 const Image = props => {
   if (!!props.src) {
-    return <img src={props.src} className="embedded-img" alt="" />;
+    console.log(props);
+    const { src, caption, desc } = props;
+    return (
+      <div className="embedded-image">
+        <div className="image-n-caption">
+          <img src={src} className="embedded-img" alt="" />
+          <small className="caption unselectable">{caption}</small>
+        </div>
+        <p className="image-description unselectable">{desc}</p>
+      </div>
+    );
   }
   return null;
 };
@@ -40,13 +50,13 @@ const Media = props => {
   const entity = props.contentState.getEntity(props.block.getEntityAt(0));
 
   // image src and type
-  const { src } = entity.getData();
+  const { src, caption, desc } = entity.getData();
   const type = entity.getType();
 
   let media;
   if (type === 'image') {
     // render image compononent
-    media = <Image src={src} />;
+    media = <Image src={src} caption={caption} desc={desc} />;
   }
 
   return media;

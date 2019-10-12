@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, createRef } from 'react';
+import React, { useState, Fragment } from 'react';
 import { EditorState, RichUtils, AtomicBlockUtils } from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
 import createInlineToolbarPlugin from 'draft-js-inline-toolbar-plugin';
@@ -9,7 +9,7 @@ import createEmojiPlugin from 'draft-js-emoji-plugin';
 
 import { ItalicButton, BoldButton, UnderlineButton } from 'draft-js-buttons';
 
-import 'draft-js/dist/Draft.css';
+// import 'draft-js/dist/Draft.css';
 import 'draft-js-inline-toolbar-plugin/lib/plugin.css';
 import 'draft-js-emoji-plugin/lib/plugin.css';
 
@@ -63,12 +63,12 @@ const plugins = [
 ];
 
 // editor ref
-const editorRef = createRef();
+// const editorRef = createRef();
 
 // focus function to programatically activate editor through ref
-const focus = () => {
-  editorRef && editorRef.current.focus();
-};
+// const focus = () => {
+//   editorRef && editorRef.current.focus();
+// };
 
 /* This function is passsed as a callback in the event listener responsible for adding the image
 
@@ -239,22 +239,52 @@ const EditorComp = () => {
     }
   };
 
-  useEffect(() => {
-    setTimeout(() => focus(), 0);
-  });
+  // useEffect(() => {
+  //   setTimeout(() => focus(), 0);
+  // });
 
+  // toggle image input
+  const [imagePrompt, setImagePrompt] = useState(false);
+
+  // image form
+  const [imageState, setImageState] = useState({
+    imageUrl: '',
+    imageCaption: '',
+    imageDescription: ''
+  });
+  const handleImageInputChange = e => {
+    setImageState({
+      ...imageState,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const clearForm = () => {
+    setImagePrompt(false);
+    setImageState({
+      imageCaption: '',
+      imageDescription: '',
+      imageUrl: ''
+    });
+  };
+
+  const handleImageSubmit = e => {
+    e.preventDefault();
+    clearForm(false);
+    onAddImage(e);
+  };
+
+  const { imageCaption, imageDescription, imageUrl } = imageState;
   // The functionality for embedding images
   const onAddImage = e => {
     e.preventDefault();
-    // image input
-    const urlValue = window.prompt('Paste image link');
     const contentState = editorState.getCurrentContent();
 
     // add entity to contentState
     const contentStateWithEntity = contentState.createEntity(
       'image',
       'IMMUTABLE',
-      { src: urlValue }
+      { src: imageUrl, caption: imageCaption, desc: imageDescription }
     ); // these are the metadata made available to the Media component in the custome block renderer
 
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
@@ -267,6 +297,8 @@ const EditorComp = () => {
       AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, ' ')
     );
   };
+
+  // custom blocks for style alignment
 
   return (
     <div className="editor-wrapper">
@@ -370,7 +402,10 @@ const EditorComp = () => {
           <button className="style-btn ordered-btn" onClick={onULClick}>
             <i className="fas fa-list"></i>
           </button>
-          <button className="style-btn add-image-btn" onClick={onAddImage}>
+          <button
+            className="style-btn add-image-btn"
+            onClick={() => setImagePrompt(!imagePrompt)}
+          >
             <i className="far fa-image"></i>
           </button>
         </div>
@@ -388,7 +423,7 @@ const EditorComp = () => {
           onChange={setEditorState}
           placeholder="Whats on your mind?"
           spellCheck={true}
-          ref={editorRef}
+          /* ref={editorRef} */
         />
         <InlineToolbar>
           {// may be use React.Fragment instead of div to improve perfomance after React 16
@@ -415,6 +450,45 @@ const EditorComp = () => {
         </div>
         <div className="emoji-selection">
           <EmojiSelect />
+          {imagePrompt && (
+            <div className="image-form-container">
+              <h2 className="form-head">Add image</h2>
+              <form className="image-form" onSubmit={e => handleImageSubmit(e)}>
+                <input
+                  name="imageUrl"
+                  placeholder="Image link"
+                  value={imageUrl}
+                  type="text"
+                  className="form-input image-url-input"
+                  onChange={e => handleImageInputChange(e)}
+                />
+                <input
+                  type="text"
+                  name="imageCaption"
+                  placeholder="Image caption"
+                  value={imageCaption}
+                  className="form-input image-caption-input"
+                  onChange={e => handleImageInputChange(e)}
+                />
+                <textarea
+                  type="text"
+                  name="imageDescription"
+                  placeholder="Image description"
+                  value={imageDescription}
+                  className="form-input image-desc-input"
+                  onChange={e => handleImageInputChange(e)}
+                />
+                <div className="form-btns">
+                  <button type="submit" className="green-btn">
+                    Add image
+                  </button>
+                  <button onClick={() => clearForm()} className="red-btn">
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
         </div>
       </div>
     </div>
