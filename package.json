@@ -24,6 +24,8 @@
     "draft-js-table-plugin": "^1.0.4",
     "draft-js-toolbar-plugin": "^1.0.5",
     "draft-js-undo-plugin": "^2.0.3",
+    "draft-js-video-plugin": "^2.0.2",
+    "immutable": "^4.0.0-rc.12",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-scripts": "3.2.0"

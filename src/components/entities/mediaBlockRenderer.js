@@ -28,7 +28,6 @@ export const mediaBlockRenderer = block => {
  */
 const Image = props => {
   if (!!props.src) {
-    console.log(props);
     const { src, caption, desc } = props;
     return (
       <div className="embedded-image">

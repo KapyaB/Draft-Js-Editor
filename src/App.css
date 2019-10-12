@@ -1,5 +1,7 @@
 @import '../node_modules/draft-js/dist/Draft.css';
 
+/* #0062A2 */
+
 body {
   box-sizing: border-box
 }
@@ -78,6 +80,22 @@ button:hover {
   background: #fff;
 }
 
+.align-left {
+  text-align: left;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.align-center {
+  text-align: center;
+}
+
+.align-justify {
+  text-align: justify;
+}
+
 /* embedded images */
 figure {
   width: fit-content;
@@ -126,7 +144,7 @@ figure {
   width: 95%;
   margin: 1rem auto;
   padding: 0.5rem;
-  box-shadow: -3px 3px 10px 0px rgba(0, 0, 0, 0.5)
+  box-shadow: -3px 3px 10px 0px #8888
 }
 
 .my-blockquote {
@@ -151,19 +169,7 @@ figure {
   border-radius: 5px;
   background: #fff;
   padding: 0.15rem;
-}
-
-.style-btn {
-  margin: 0.125rem 0.125rem
-}
-
-.style-btn {
-  background: #296f91;
-  color: #fff;
-  border: 1px solid #296f91;
-  margin: 0.25rem;
-  border-radius: 5px;
-  height: 1.5rem;
+  display: flex;
 }
 
 .editor-wrapper {
@@ -173,11 +179,12 @@ figure {
 }
 
 .editor-tools {
+  width: 96.5%;
+  overflow: auto;
   display: flex;
   align-items: center;
-  justify-content: center;
   margin: 0.5rem auto;
-  box-shadow: -3px 3px 10px 0px #0008;
+  box-shadow: -3px 3px 10px 0px #8888;
 }
 
 .inline-styles,
@@ -192,9 +199,10 @@ figure {
 }
 
 .style-btn {
+  background: #555c;
   color: #fff;
-  background: #296f91;
   border: 1px solid;
+  margin: 0.25rem;
   border-radius: 5px;
   height: 1.5rem;
 }
@@ -207,6 +215,10 @@ figure {
   color: #296f91;
   background: #fff;
   border: 1px solid #296f91;
+}
+
+.headers {
+  display: flex;
 }
 
 /* counters */

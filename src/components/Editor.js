@@ -1,5 +1,13 @@
 import React, { useState, Fragment } from 'react';
-import { EditorState, RichUtils, AtomicBlockUtils } from 'draft-js';
+import { Map as imutableMap } from 'immutable';
+import {
+  EditorState,
+  RichUtils,
+  AtomicBlockUtils,
+  EditorBlock,
+  convertToRaw,
+  DefaultDraftBlockRenderMap
+} from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
 import createInlineToolbarPlugin from 'draft-js-inline-toolbar-plugin';
 import createLinkPlugin from 'draft-js-anchor-plugin';
@@ -98,20 +106,9 @@ const EditorComp = () => {
   };
 
   //  Styling controls
-
-  // keep track of current style
-  const [activeBtns, setActiveBtns] = useState([]);
-
   // BOLD
   const onBoldclick = () => {
     setEditorState(RichUtils.toggleInlineStyle(editorState, 'BOLD'));
-    if (activeBtns.indexOf('bold') !== -1) {
-      /* remove style */
-      setActiveBtns(activeBtns.filter(btn => btn !== 'bold'));
-    } else {
-      /* add style */
-      setActiveBtns([...activeBtns, 'bold']);
-    }
   };
 
   // ITALICS
@@ -161,6 +158,9 @@ const EditorComp = () => {
 
       case 'code-block':
         return 'my-codeblock';
+
+      case 'align-left':
+        return 'align-block-left';
     }
   }
   // HEADERS
@@ -203,6 +203,21 @@ const EditorComp = () => {
     );
   };
 
+  // TEXT ALIGNMENT
+
+  const onAlignClick = alignment => {
+    const thisBlock = document.getElementsByClassName(
+      'public-DraftStyleDefault-block'
+    )[0];
+    const classes = thisBlock.classList;
+    // remove previously added (default has only two classes, so remove 3rd)
+    if (classes.length > 2) {
+      classes.remove(classes[2]);
+    }
+    classes.add(alignment);
+    console.log(thisBlock.classList);
+  };
+
   // LIST LEVEL
   const onTab = e => {
     const maxDepth = 5;
@@ -238,6 +253,18 @@ const EditorComp = () => {
       borderLeft: ' 5px solid #888'
     }
   };
+
+  // CUSTTOM BLOCKS
+  const blockRenderMap = imutableMap({
+    'align-left': {
+      element: 'div'
+      // can have a wrapper property - a react component that wraps this component
+    }
+  });
+
+  const extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(
+    blockRenderMap
+  );
 
   // useEffect(() => {
   //   setTimeout(() => focus(), 0);
@@ -308,12 +335,7 @@ const EditorComp = () => {
           <RedoButton />
         </div>
         <div className="inline-styles">
-          <button
-            className={`bold-btn style-btn ${
-              activeBtns.includes('bold') ? 'active-btn' : ''
-            }`}
-            onClick={onBoldclick}
-          >
+          <button className="bold-btn style-btn" onClick={onBoldclick}>
             <strong>B</strong>
           </button>
 
@@ -402,6 +424,32 @@ const EditorComp = () => {
           <button className="style-btn ordered-btn" onClick={onULClick}>
             <i className="fas fa-list"></i>
           </button>
+          <div className="align-tools">
+            <button
+              className="align-left style-btn"
+              onClick={() => onAlignClick('align-left')}
+            >
+              Left
+            </button>
+            <button
+              className="align-center style-btn"
+              onClick={() => onAlignClick('align-center')}
+            >
+              Center
+            </button>
+            <button
+              className="align-right style-btn"
+              onClick={() => onAlignClick('align-right')}
+            >
+              Right
+            </button>
+            <button
+              className="align-justify style-btn"
+              onClick={() => onAlignClick('align-justify')}
+            >
+              Justify
+            </button>
+          </div>
           <button
             className="style-btn add-image-btn"
             onClick={() => setImagePrompt(!imagePrompt)}
@@ -418,6 +466,7 @@ const EditorComp = () => {
           customStyleMap={styleMap}
           plugins={plugins}
           blockRendererFn={mediaBlockRenderer}
+          blockRenderMap={extendedBlockRenderMap}
           blockStyleFn={myBlockStyleFn}
           onTab={onTab}
           onChange={setEditorState}
