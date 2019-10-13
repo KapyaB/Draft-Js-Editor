@@ -80,6 +80,10 @@ button:hover {
   background: #fff;
 }
 
+.align-tools {
+  display: flex;
+}
+
 .align-left {
   text-align: left;
 }

@@ -206,16 +206,31 @@ const EditorComp = () => {
   // TEXT ALIGNMENT
 
   const onAlignClick = alignment => {
-    const thisBlock = document.getElementsByClassName(
+    // get all blocks
+    const allBlocks = document.getElementsByClassName(
       'public-DraftStyleDefault-block'
-    )[0];
-    const classes = thisBlock.classList;
+    );
+
+    /*
+      get selected or new block using anchor key and the "data-offset-key" attribute(from draft) 
+      the first set of chars in the data offset key is the same as the block's anchor key.
+    */
+    var myBlock;
+    [...allBlocks].map(block => {
+      const anchorKey = block.getAttribute('data-offset-key').split('-')[0];
+      const selectedBlockKey = editorState.getSelection().getAnchorKey();
+      // check if the two keya re equal
+      if (anchorKey === selectedBlockKey) {
+        myBlock = block;
+      }
+      return myBlock;
+    });
+    const classes = myBlock.classList;
     // remove previously added (default has only two classes, so remove 3rd)
     if (classes.length > 2) {
       classes.remove(classes[2]);
     }
     classes.add(alignment);
-    console.log(thisBlock.classList);
   };
 
   // LIST LEVEL
@@ -429,25 +444,25 @@ const EditorComp = () => {
               className="align-left style-btn"
               onClick={() => onAlignClick('align-left')}
             >
-              Left
+              <i className="fas fa-align-left"></i>
             </button>
             <button
               className="align-center style-btn"
               onClick={() => onAlignClick('align-center')}
             >
-              Center
+              <i className="fas fa-align-center"></i>
             </button>
             <button
               className="align-right style-btn"
               onClick={() => onAlignClick('align-right')}
             >
-              Right
+              <i className="fas fa-align-right"></i>
             </button>
             <button
               className="align-justify style-btn"
               onClick={() => onAlignClick('align-justify')}
             >
-              Justify
+              <i className="fas fa-align-justify"></i>
             </button>
           </div>
           <button
