@@ -4,9 +4,10 @@ import {
   EditorState,
   RichUtils,
   AtomicBlockUtils,
-  EditorBlock,
   convertToRaw,
-  DefaultDraftBlockRenderMap
+  DefaultDraftBlockRenderMap,
+  getDefaultKeyBinding,
+  KeyBindingUtil
 } from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
 import createInlineToolbarPlugin from 'draft-js-inline-toolbar-plugin';
@@ -88,7 +89,6 @@ const EditorComp = () => {
   /*
   The EditorState object is a complete snapshot of the state of the editor, including contents, cursor, and undo/redo history. Any changes to the content and selection within the editor will create new editorState object
   */
-
   const handleKeyCommand = (command, editorState) => {
     /**
      * For inline and block style behavior, the RichUtils module provides useful functions to help manipulate state. It has information about the core key commands available to web editors, such as Cmd+B (bold), Cmd+I (italic), etc.
@@ -96,6 +96,15 @@ const EditorComp = () => {
      */
 
     const newState = RichUtils.handleKeyCommand(editorState, command);
+
+    if (typeof command === 'object') {
+      const { cmd, e } = command;
+      if (cmd === 'tab') {
+        onTab(e);
+      }
+
+      return 'handled';
+    }
 
     if (newState) {
       setEditorState(newState);
@@ -233,6 +242,14 @@ const EditorComp = () => {
     classes.add(alignment);
   };
 
+  // key binding
+  const { hasCommandModifier } = KeyBindingUtil;
+  const keyBindingFn = e => {
+    if (e.keyCode === 9) {
+      return { cmd: 'tab', e };
+    }
+    return getDefaultKeyBinding(e);
+  };
   // LIST LEVEL
   const onTab = e => {
     const maxDepth = 5;
@@ -483,7 +500,7 @@ const EditorComp = () => {
           blockRendererFn={mediaBlockRenderer}
           blockRenderMap={extendedBlockRenderMap}
           blockStyleFn={myBlockStyleFn}
-          onTab={onTab}
+          keyBindingFn={keyBindingFn}
           onChange={setEditorState}
           placeholder="Whats on your mind?"
           spellCheck={true}
