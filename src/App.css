@@ -203,8 +203,8 @@ figure {
 }
 
 .style-btn {
-  background: #555c;
-  color: #fff;
+  background: #fff;
+  color: #333;
   border: 1px solid;
   margin: 0.25rem;
   border-radius: 5px;
@@ -213,12 +213,13 @@ figure {
 
 .style-btn:hover {
   cursor: pointer;
+  background: #555c;
+  color: #fff;
 }
 
 .active-btn {
-  color: #296f91;
-  background: #fff;
-  border: 1px solid #296f91;
+  background: #555c;
+  color: #fff;
 }
 
 .headers {

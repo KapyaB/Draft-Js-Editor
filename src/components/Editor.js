@@ -301,7 +301,7 @@ const EditorComp = () => {
 
   // Keep track of active styles
   const allBlocks = convertToRaw(editorState.getCurrentContent()).blocks;
-  console.log(allBlocks);
+  // console.log(allBlocks);
   const selectedKey = editorState.getSelection().getAnchorKey();
   const selectedBlock = allBlocks.find(block => block.key === selectedKey);
   const currentBlockStyles = selectedBlock.inlineStyleRanges; //array of objects
@@ -317,8 +317,7 @@ const EditorComp = () => {
     }
     return activeStyles;
   });
-  console.log(editorState.getSelection());
-  console.log(activeStyles);
+  // console.log(editorState.getSelection());
 
   useEffect(() => {
     setTimeout(() => focus(), 0);
@@ -380,8 +379,6 @@ const EditorComp = () => {
     );
   };
 
-  // custom blocks for style alignment
-
   return (
     <div className="editor-wrapper">
       <div className="editor-tools">
@@ -390,28 +387,47 @@ const EditorComp = () => {
           <RedoButton />
         </div>
         <div className="inline-styles">
-          <button className="bold-btn style-btn" onClick={onBoldclick}>
+          <button
+            className={`bold-btn style-btn ${
+              activeStyles.includes('BOLD') ? 'active-btn' : null
+            }`}
+            onClick={() => onBoldclick()}
+          >
             <strong>B</strong>
           </button>
 
-          <button className="style-btn italic-btn" onClick={onItalicClick}>
+          <button
+            className={`italic-btn style-btn ${
+              activeStyles.includes('ITALIC') ? 'active-btn' : null
+            }`}
+            onClick={onItalicClick}
+          >
             <em>I</em>
           </button>
 
           <button
-            className="style-btn underline-btn"
+            className={`underline-btn style-btn ${
+              activeStyles.includes('UNDERLINE') ? 'active-btn' : null
+            }`}
             style={{ textDecoration: 'underline' }}
             onClick={onUnderlineClick}
           >
             U
           </button>
 
-          <button className="style-btn code-btn" onClick={onCodeClick}>
-            {'<>'}
+          <button
+            className={`code-btn style-btn ${
+              activeStyles.includes('CODE') ? 'active-btn' : null
+            }`}
+            onClick={onCodeClick}
+          >
+            {'< >'}
           </button>
 
           <button
-            className="style-btn strike-through-btn"
+            className={`strike-through-btn style-btn ${
+              activeStyles.includes('STRIKETHROUGH') ? 'active-btn' : null
+            }`}
             style={{ textDecoration: 'line-through' }}
             onClick={onStrikeThroughClick}
           >
@@ -419,21 +435,27 @@ const EditorComp = () => {
           </button>
 
           <button
-            className="style-btn highlight-btn"
+            className={`highlight-btn style-btn ${
+              activeStyles.includes('HIGHLIGHT') ? 'active-btn' : null
+            }`}
             onClick={onHighlightClick}
           >
             <i className=" fas fa-highlighter"></i>
           </button>
 
           <button
-            className="style-btn superscript-btn"
+            className={`superscript-btn style-btn ${
+              activeStyles.includes('SUPERSCRIPT') ? 'active-btn' : null
+            }`}
             onClick={onSuperScriptClick}
           >
             X<sup>2</sup>
           </button>
 
           <button
-            className="style-btn subscript-btn"
+            className={`subscript-btn style-btn ${
+              activeStyles.includes('SUBSCRIPT') ? 'active-btn' : null
+            }`}
             onClick={onSubScriptClick}
           >
             X<sub>2</sub>
