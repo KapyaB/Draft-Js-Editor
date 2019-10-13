@@ -22,6 +22,7 @@ import 'draft-js-inline-toolbar-plugin/lib/plugin.css';
 import 'draft-js-emoji-plugin/lib/plugin.css';
 
 import { mediaBlockRenderer } from './entities/mediaBlockRenderer';
+import styleMap from '../data/inlineStyles';
 
 // ADDING LINK
 const linkPlugin = createLinkPlugin({
@@ -117,6 +118,11 @@ const EditorComp = () => {
 
    */
   //  Styling controls
+  // FONT
+  const onFontSelect = e => {
+    setEditorState(RichUtils.toggleInlineStyle(editorState, e.target.value));
+  };
+
   // BOLD
   const onBoldclick = () => {
     setEditorState(RichUtils.toggleInlineStyle(editorState, 'BOLD'));
@@ -257,36 +263,6 @@ const EditorComp = () => {
     setEditorState(RichUtils.onTab(e, editorState, maxDepth));
   };
 
-  // custom inline styles
-  const styleMap = {
-    STRIKETHROUGH: {
-      textDecoration: 'line-through'
-    },
-    CODE: {
-      color: '#00398a',
-      background: '#ccc8',
-      fontFamily: 'Inconsolata, monospace',
-      fontWeight: 'bold'
-    },
-    HIGHLIGHT: {
-      background: '#e9ff32'
-    },
-    SUPERSCRIPT: {
-      verticalAlign: 'super',
-      fontSize: 'smaller'
-    },
-    SUBSCRIPT: {
-      verticalAlign: 'sub',
-      fontSize: 'smaller'
-    },
-    blockquote: {
-      color: ' #ddd',
-      fontStyle: ' italic',
-      textAlign: ' center',
-      borderLeft: ' 5px solid #888'
-    }
-  };
-
   // CUSTTOM BLOCKS
   const blockRenderMap = imutableMap({
     'align-left': {
@@ -386,6 +362,22 @@ const EditorComp = () => {
           <UndoButton />
           <RedoButton />
         </div>
+        <div
+          className="font-styles"
+          onMouseOver={() => setRef(null)}
+          onMouseLeave={() => setRef(editorRef)}
+        >
+          <select
+            name="font"
+            id="font-selection"
+            className="font-selector"
+            onChange={e => onFontSelect(e)}
+          >
+            <option value="SansSerif">Sans Serif</option>
+            <option value="Roboto">Roboto</option>
+            <option value="OpenSans">Open Sans</option>
+          </select>
+        </div>
         <div className="inline-styles">
           <button
             className={`bold-btn style-btn ${
@@ -421,7 +413,7 @@ const EditorComp = () => {
             }`}
             onClick={onCodeClick}
           >
-            {'< >'}
+            {'<>'}
           </button>
 
           <button

@@ -6,10 +6,10 @@ body {
   box-sizing: border-box
 }
 
-* {
+/* * {
   font-family: 'Barlow',
     sans-serif;
-}
+} */
 
 pre {
   font-family: 'Inconsolata',
