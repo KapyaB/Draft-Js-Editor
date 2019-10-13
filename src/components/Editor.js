@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, useEffect, createRef, Fragment } from 'react';
 import { Map as imutableMap } from 'immutable';
 import {
   EditorState,
@@ -6,8 +6,7 @@ import {
   AtomicBlockUtils,
   convertToRaw,
   DefaultDraftBlockRenderMap,
-  getDefaultKeyBinding,
-  KeyBindingUtil
+  getDefaultKeyBinding
 } from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
 import createInlineToolbarPlugin from 'draft-js-inline-toolbar-plugin';
@@ -72,17 +71,10 @@ const plugins = [
 ];
 
 // editor ref
-// const editorRef = createRef();
-
-// focus function to programatically activate editor through ref
-// const focus = () => {
-//   editorRef && editorRef.current.focus();
-// };
+const editorRef = createRef();
 
 /* This function is passsed as a callback in the event listener responsible for adding the image
-
-focus() is called once our EditorState has finished updating. This way, users will be able to immediately resume entering (or deleting) text upon the addition of the image.
-*/
+ */
 
 const EditorComp = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -114,6 +106,16 @@ const EditorComp = () => {
     return 'not-handled';
   };
 
+  // ref state
+  const [ref, setRef] = useState(editorRef);
+  // focus function to programatically activate editor through ref
+  const focus = () => {
+    ref && ref.current.focus();
+  };
+  /**
+   *  focus() is called once our EditorState has finished updating. This way, users will be able to immediately resume entering (or deleting) text upon clicking a (styling) button or addition of an image.
+
+   */
   //  Styling controls
   // BOLD
   const onBoldclick = () => {
@@ -243,7 +245,6 @@ const EditorComp = () => {
   };
 
   // key binding
-  const { hasCommandModifier } = KeyBindingUtil;
   const keyBindingFn = e => {
     if (e.keyCode === 9) {
       return { cmd: 'tab', e };
@@ -298,9 +299,30 @@ const EditorComp = () => {
     blockRenderMap
   );
 
-  // useEffect(() => {
-  //   setTimeout(() => focus(), 0);
-  // });
+  // Keep track of active styles
+  const allBlocks = convertToRaw(editorState.getCurrentContent()).blocks;
+  console.log(allBlocks);
+  const selectedKey = editorState.getSelection().getAnchorKey();
+  const selectedBlock = allBlocks.find(block => block.key === selectedKey);
+  const currentBlockStyles = selectedBlock.inlineStyleRanges; //array of objects
+  const selectionOffset = editorState.getSelection().getAnchorOffset(); // position of cursor or start of selection
+
+  // add to array
+  var activeStyles = [];
+  currentBlockStyles.filter(inlineStyle => {
+    const { offset, length, style } = inlineStyle;
+    if (offset < selectionOffset && selectionOffset <= length + offset) {
+      // return style;
+      !activeStyles.includes(style) && activeStyles.push(style);
+    }
+    return activeStyles;
+  });
+  console.log(editorState.getSelection());
+  console.log(activeStyles);
+
+  useEffect(() => {
+    setTimeout(() => focus(), 0);
+  });
 
   // toggle image input
   const [imagePrompt, setImagePrompt] = useState(false);
@@ -320,6 +342,7 @@ const EditorComp = () => {
 
   const clearForm = () => {
     setImagePrompt(false);
+    setRef(editorRef);
     setImageState({
       imageCaption: '',
       imageDescription: '',
@@ -329,7 +352,7 @@ const EditorComp = () => {
 
   const handleImageSubmit = e => {
     e.preventDefault();
-    clearForm(false);
+    clearForm();
     onAddImage(e);
   };
 
@@ -484,7 +507,10 @@ const EditorComp = () => {
           </div>
           <button
             className="style-btn add-image-btn"
-            onClick={() => setImagePrompt(!imagePrompt)}
+            onClick={() => {
+              setImagePrompt(!imagePrompt);
+              setRef(null);
+            }}
           >
             <i className="far fa-image"></i>
           </button>
@@ -504,7 +530,7 @@ const EditorComp = () => {
           onChange={setEditorState}
           placeholder="Whats on your mind?"
           spellCheck={true}
-          /* ref={editorRef} */
+          ref={ref}
         />
         <InlineToolbar>
           {// may be use React.Fragment instead of div to improve perfomance after React 16
