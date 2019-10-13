@@ -232,25 +232,10 @@ const EditorComp = () => {
         return 'align-block-left';
     }
   }
-  // HEADERS
-  const onH1Click = () => {
-    setEditorState(RichUtils.toggleBlockType(editorState, 'header-one'));
-  };
-  const onH2Click = () => {
-    setEditorState(RichUtils.toggleBlockType(editorState, 'header-two'));
-  };
-  const onH3Click = () => {
-    setEditorState(RichUtils.toggleBlockType(editorState, 'header-three'));
-  };
-  const onH4Click = () => {
-    setEditorState(RichUtils.toggleBlockType(editorState, 'header-four'));
-  };
-  const onH5Click = () => {
-    setEditorState(RichUtils.toggleBlockType(editorState, 'header-five'));
-  };
-  const onH6Click = () => {
-    setEditorState(RichUtils.toggleBlockType(editorState, 'header-six'));
-  };
+  // // HEADERS (e.g.)
+  // const onH1Click = () => {
+  //   setEditorState(RichUtils.toggleBlockType(editorState, 'header-one'));
+  // };
 
   // BLOCKQUOTE
   const onBlockquoteClick = () => {
@@ -535,7 +520,7 @@ const EditorComp = () => {
           </button>
         </div>
         <div className="block-styles">
-          <div className="headers">
+          {/* <div className="headers">
             <button
               className={`h1-btn style-btn ${
                 activeStyles.includes('header-one') ? 'active-btn' : null
@@ -544,47 +529,7 @@ const EditorComp = () => {
             >
               H1
             </button>
-            <button
-              className={`h-btn style-btn ${
-                activeStyles.includes('header-two') ? 'active-btn' : null
-              }`}
-              onClick={onH2Click}
-            >
-              H2
-            </button>
-            <button
-              className={`h3-btn style-btn ${
-                activeStyles.includes('header-three') ? 'active-btn' : null
-              }`}
-              onClick={onH3Click}
-            >
-              H3
-            </button>
-            <button
-              className={`h4-btn style-btn ${
-                activeStyles.includes('header-four') ? 'active-btn' : null
-              }`}
-              onClick={onH4Click}
-            >
-              H4
-            </button>
-            <button
-              className={`h5-btn style-btn ${
-                activeStyles.includes('header-five') ? 'active-btn' : null
-              }`}
-              onClick={onH5Click}
-            >
-              H5
-            </button>
-            <button
-              className={`h6-btn style-btn ${
-                activeStyles.includes('header-six') ? 'active-btn' : null
-              }`}
-              onClick={onH6Click}
-            >
-              H6
-            </button>
-          </div>
+          </div> */}
           <button
             className={`blockquote-btn style-btn ${
               activeStyles.includes('blockquote') ? 'active-btn' : null

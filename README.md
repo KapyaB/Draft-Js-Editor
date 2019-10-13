@@ -22,4 +22,4 @@ A rich text editor build with Facebook's Draft js framework
 
 - [ ] minor issues with focus when changing font size (details later)
 
-- [ ] custom font size incapacitates headers (H1-H6)
+- [x] custom font size incapacitates headers (H1-H6) -moot
