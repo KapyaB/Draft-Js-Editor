@@ -2,7 +2,7 @@
 A rich text editor build with Facebook's Draft js framework
 
 ## current to-dos:
-- [ ] highlight current blockstyle buttons
+- [x] highlight current blockstyle buttons
 - [ ] link embeds
 - [ ] canvas
 - [ ] color picker

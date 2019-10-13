@@ -273,7 +273,7 @@ const EditorComp = () => {
   };
 
   // TEXT ALIGNMENT
-
+  const [currAlignment, setCurrAlignment] = useState('');
   const onAlignClick = alignment => {
     // get all blocks
     const allBlocks = document.getElementsByClassName(
@@ -284,6 +284,7 @@ const EditorComp = () => {
       get selected or new block using anchor key and the "data-offset-key" attribute(from draft) 
       the first set of chars in the data offset key is the same as the block's anchor key.
     */
+
     var myBlock;
     [...allBlocks].map(block => {
       const anchorKey = block.getAttribute('data-offset-key').split('-')[0];
@@ -300,6 +301,7 @@ const EditorComp = () => {
       classes.remove(classes[2]);
     }
     classes.add(alignment);
+    setCurrAlignment(alignment);
   };
 
   // key binding
@@ -329,15 +331,16 @@ const EditorComp = () => {
 
   // Keep track of active styles
   const allBlocks = convertToRaw(editorState.getCurrentContent()).blocks;
-  // console.log(allBlocks);
   const selectedKey = editorState.getSelection().getAnchorKey();
   const selectedBlock = allBlocks.find(block => block.key === selectedKey);
-  const currentBlockStyles = selectedBlock.inlineStyleRanges; //array of objects
+  const currentInlineStyles = selectedBlock.inlineStyleRanges; //array of objects
+  const currentBlockStyle = selectedBlock.type;
   const selectionOffset = editorState.getSelection().getAnchorOffset(); // position of cursor or start of selection
 
   // add to array
   var activeStyles = [];
-  currentBlockStyles.filter(inlineStyle => {
+  activeStyles.push(currentBlockStyle);
+  currentInlineStyles.filter(inlineStyle => {
     const { offset, length, style } = inlineStyle;
     if (offset < selectionOffset && selectionOffset <= length + offset) {
       // return style;
@@ -345,7 +348,6 @@ const EditorComp = () => {
     }
     return activeStyles;
   });
-  console.log(activeStyles);
 
   useEffect(() => {
     setTimeout(() => focus(), 0);
@@ -534,65 +536,117 @@ const EditorComp = () => {
         </div>
         <div className="block-styles">
           <div className="headers">
-            <button className="style-btn h1-btn" onClick={onH1Click}>
+            <button
+              className={`h1-btn style-btn ${
+                activeStyles.includes('header-one') ? 'active-btn' : null
+              }`}
+              onClick={onH1Click}
+            >
               H1
             </button>
-            <button className="style-btn h1-btn" onClick={onH2Click}>
+            <button
+              className={`h-btn style-btn ${
+                activeStyles.includes('header-two') ? 'active-btn' : null
+              }`}
+              onClick={onH2Click}
+            >
               H2
             </button>
-            <button className="style-btn h1-btn" onClick={onH3Click}>
+            <button
+              className={`h3-btn style-btn ${
+                activeStyles.includes('header-three') ? 'active-btn' : null
+              }`}
+              onClick={onH3Click}
+            >
               H3
             </button>
-            <button className="style-btn h1-btn" onClick={onH4Click}>
+            <button
+              className={`h4-btn style-btn ${
+                activeStyles.includes('header-four') ? 'active-btn' : null
+              }`}
+              onClick={onH4Click}
+            >
               H4
             </button>
-            <button className="style-btn h1-btn" onClick={onH5Click}>
+            <button
+              className={`h5-btn style-btn ${
+                activeStyles.includes('header-five') ? 'active-btn' : null
+              }`}
+              onClick={onH5Click}
+            >
               H5
             </button>
-            <button className="style-btn h1-btn" onClick={onH6Click}>
+            <button
+              className={`h6-btn style-btn ${
+                activeStyles.includes('header-six') ? 'active-btn' : null
+              }`}
+              onClick={onH6Click}
+            >
               H6
             </button>
           </div>
           <button
-            className="style-btn blockquote-btn"
+            className={`blockquote-btn style-btn ${
+              activeStyles.includes('blockquote') ? 'active-btn' : null
+            }`}
             onClick={onBlockquoteClick}
           >
             <i className="fas fa-quote-right"></i>
           </button>
           <button
-            className="style-btn codeblock-btn"
+            className={`codeblock-btn style-btn ${
+              activeStyles.includes('code-block') ? 'active-btn' : null
+            }`}
             onClick={onCodeBlockClick}
           >
             code
           </button>
 
-          <button className="style-btn ordered-btn" onClick={onOLClick}>
+          <button
+            className={`ordered-btn style-btn ${
+              activeStyles.includes('ordered-list-item') ? 'active-btn' : null
+            }`}
+            onClick={onOLClick}
+          >
             <i className="fas fa-list-ol"></i>
           </button>
-          <button className="style-btn ordered-btn" onClick={onULClick}>
+          <button
+            className={`unordered-btn style-btn ${
+              activeStyles.includes('unordered-list-item') ? 'active-btn' : null
+            }`}
+            onClick={onULClick}
+          >
             <i className="fas fa-list"></i>
           </button>
           <div className="align-tools">
             <button
-              className="align-left style-btn"
+              className={`align-left style-btn ${
+                currAlignment === 'align-left' ? 'active-btn' : null
+              }`}
               onClick={() => onAlignClick('align-left')}
             >
               <i className="fas fa-align-left"></i>
             </button>
             <button
-              className="align-center style-btn"
+              className={`align-center style-btn ${
+                currAlignment === 'align-center' ? 'active-btn' : null
+              }`}
               onClick={() => onAlignClick('align-center')}
             >
               <i className="fas fa-align-center"></i>
             </button>
             <button
-              className="align-right style-btn"
+              className={`align-right style-btn ${
+                currAlignment === 'align-right' ? 'active-btn' : null
+              }`}
               onClick={() => onAlignClick('align-right')}
             >
               <i className="fas fa-align-right"></i>
             </button>
             <button
-              className="align-justify style-btn"
+              className={`align-justify style-btn ${
+                currAlignment === 'align-justify' ? 'active-btn' : null
+              }`}
               onClick={() => onAlignClick('align-justify')}
             >
               <i className="fas fa-align-justify"></i>
