@@ -118,9 +118,35 @@ const EditorComp = () => {
 
    */
   //  Styling controls
+  // custom style function
+  const [customStyle, setCustomStyle] = useState({
+    name: '',
+    value: '12'
+  });
+  const { name, value } = customStyle;
+  const customStyleFn = () => {
+    const { name, value } = customStyle;
+    const output = {};
+    if (name === 'fontSize') {
+      output.fontSize = `${value}px`;
+    }
+    return output;
+  };
+
+  // font size
+  const handleFontSizeChange = e => {
+    setCustomStyle({ name: 'fontSize', value: e.target.value });
+    // setRef(editorRef);
+  };
+
+  const handleFontSizeSubmit = e => {
+    e.preventDefault();
+    setRef(editorRef);
+  };
   // FONT
   const [currFont, setCurrFont] = useState('Arial');
   const [showFonts, setShowFonts] = useState(false);
+
   const fonts = [
     'Sans_Serif',
     'Roboto',
@@ -411,6 +437,25 @@ const EditorComp = () => {
               </div>
             )}
           </div>
+          <form
+            className="font-size-form"
+            onSubmit={e => handleFontSizeSubmit(e)}
+          >
+            <input
+              type="number"
+              min="1"
+              step="1"
+              placeholder="font size"
+              className="font-size-input"
+              onChange={e => handleFontSizeChange(e)}
+              name="fontSize"
+              value={value}
+              onFocus={() => setRef(null)}
+            />
+            <button type="submit" className="set-font-size">
+              <i className="far fa-check-circle"></i>
+            </button>
+          </form>
         </div>
         <div className="inline-styles">
           <button
@@ -570,6 +615,7 @@ const EditorComp = () => {
           editorState={editorState}
           handleKeyCommand={handleKeyCommand}
           customStyleMap={styleMap}
+          customStyleFn={customStyleFn}
           plugins={plugins}
           blockRendererFn={mediaBlockRenderer}
           blockRenderMap={extendedBlockRenderMap}

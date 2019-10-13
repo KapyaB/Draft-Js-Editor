@@ -248,14 +248,15 @@ figure {
   color: #ff1a1a;
 }
 
+/* fonts */
+.font-styles {
+  display: flex;
+  align-items: center;
+}
+
 .font-selector {
-  /* padding: 0.25rem;
-  border-radius: 5px;
-  border: 1px solid #333; */
   width: max-content;
   color: #333;
-  /* display: flex;
-  flex-direction: column; */
 }
 
 .font-option:hover {
@@ -294,4 +295,31 @@ figure {
 
 .font-option:hover {
   background: #296f91;
+}
+
+.font-size-form {
+  display: flex;
+  border: 1px solid #333c;
+  height: 1.5rem;
+  border-radius: 5px;
+}
+
+.font-size-input {
+  width: 2.5rem;
+  height: 1rem;
+  border-radius: 5px;
+  padding: 0.25rem;
+  border-style: none;
+  /* border: 1px solid #333c; */
+}
+
+.set-font-size {
+  background: #fff;
+  border: none;
+  margin: auto;
+}
+
+.set-font-size:hover {
+  background: #3338;
+  color: #fff;
 }
