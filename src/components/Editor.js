@@ -111,7 +111,7 @@ const EditorComp = () => {
   const [ref, setRef] = useState(editorRef);
   // focus function to programatically activate editor through ref
   const focus = () => {
-    ref && ref.current.focus();
+    ref && ref.current && ref.current.focus();
   };
   /**
    *  focus() is called once our EditorState has finished updating. This way, users will be able to immediately resume entering (or deleting) text upon clicking a (styling) button or addition of an image.
@@ -119,8 +119,34 @@ const EditorComp = () => {
    */
   //  Styling controls
   // FONT
-  const onFontSelect = e => {
-    setEditorState(RichUtils.toggleInlineStyle(editorState, e.target.value));
+  const [currFont, setCurrFont] = useState('Arial');
+  const [showFonts, setShowFonts] = useState(false);
+  const fonts = [
+    'Sans_Serif',
+    'Roboto',
+    'Open_Sans',
+    'Times_New_Roman',
+    'Georgia',
+    'Arial',
+    'Verdana',
+    'Courier_New',
+    'Lucida_Console',
+    'Barlow',
+    'Dancing_Script',
+    'Inconsolata',
+    'Lato',
+    'Libre_Baskerville',
+    'Montserrat',
+    'Pacifico',
+    'Lobster',
+    'Raleway',
+    'Roboto_Mono',
+    'SourceSans_Pro'
+  ];
+  const onFontSelect = font => {
+    setCurrFont(font);
+    setShowFonts(false);
+    setEditorState(RichUtils.toggleInlineStyle(editorState, font));
   };
 
   // BOLD
@@ -293,7 +319,7 @@ const EditorComp = () => {
     }
     return activeStyles;
   });
-  // console.log(editorState.getSelection());
+  console.log(activeStyles);
 
   useEffect(() => {
     setTimeout(() => focus(), 0);
@@ -362,21 +388,29 @@ const EditorComp = () => {
           <UndoButton />
           <RedoButton />
         </div>
-        <div
-          className="font-styles"
-          onMouseOver={() => setRef(null)}
-          onMouseLeave={() => setRef(editorRef)}
-        >
-          <select
-            name="font"
-            id="font-selection"
-            className="font-selector"
-            onChange={e => onFontSelect(e)}
-          >
-            <option value="SansSerif">Sans Serif</option>
-            <option value="Roboto">Roboto</option>
-            <option value="OpenSans">Open Sans</option>
-          </select>
+        <div className="font-styles">
+          <div className="font-selector">
+            <button
+              className="current-font"
+              onClick={() => setShowFonts(!showFonts)}
+            >
+              {currFont.replace(/_/g, ' ')} <i className="fas fa-sort-down"></i>
+            </button>
+            {showFonts && (
+              <div className="font-list">
+                {fonts.map(font => (
+                  <button
+                    onClick={() => onFontSelect(font)}
+                    key={font}
+                    value={font}
+                    className="font-option"
+                  >
+                    {font.replace(/_/g, ' ')}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
         <div className="inline-styles">
           <button

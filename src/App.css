@@ -247,3 +247,51 @@ figure {
 .counter-overLimit {
   color: #ff1a1a;
 }
+
+.font-selector {
+  /* padding: 0.25rem;
+  border-radius: 5px;
+  border: 1px solid #333; */
+  width: max-content;
+  color: #333;
+  /* display: flex;
+  flex-direction: column; */
+}
+
+.font-option:hover {
+  cursor: pointer;
+}
+
+.font-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #3338;
+  background: #fff;
+  height: 50vh;
+  position: absolute;
+  z-index: 2;
+  overflow: auto;
+}
+
+.current-font {
+  background: #fff;
+  border: #333c 1px solid;
+  height: 1.5rem;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.current-font i {
+  margin: 0 0 0.25rem 0.25rem;
+}
+
+.font-option {
+  background: #fff;
+  border-style: none;
+}
+
+.font-option:hover {
+  background: #296f91;
+}
