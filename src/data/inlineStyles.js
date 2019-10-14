@@ -1,4 +1,4 @@
-export const styleMap = {
+export var styleMap = {
   // styling
   STRIKETHROUGH: {
     textDecoration: 'line-through'
