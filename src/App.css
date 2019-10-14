@@ -32,6 +32,25 @@ button:hover {
   transition: all 0.5s;
 }
 
+input {
+  width: -webkit-fill-available;
+}
+
+[type="file"] {
+  position: absolute !important;
+  white-space: nowrap;
+  width: 0;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 0;
+  background: #296f91;
+  color: #296f91;
+}
+
+[type="file"]:hover {
+  cursor: pointer;
+}
+
 .unselectable {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -42,7 +61,6 @@ button:hover {
 }
 
 .form-input {
-  width: 100%;
   padding: 0.25rem;
   border-radius: 5px;
   border: 1px solid #ccc;
@@ -327,4 +345,27 @@ figure {
 .set-font-size:hover {
   background: #3338;
   color: #fff;
+}
+
+/* Image */
+.input-options-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: 1px solid #eee;
+  padding: 0.25rem;
+}
+
+.image-embed-btn {
+  padding: 0.25rem;
+  margin: 0.25rem;
+  width: fit-content;
+  border: 1px solid #296f91;
+  border-radius: 5px;
+  color: #fff;
+  background: #296f91;
+}
+
+.image-embed-btn:hover {
+  cursor: pointer;
 }

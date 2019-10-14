@@ -724,17 +724,20 @@ const EditorComp = () => {
                     className="form-input image-url-input"
                     onChange={e => handleImageInputChange(e)}
                   />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    name="image"
-                    id="embed-image"
-                    className="btn"
-                    onChange={e => {
-                      onImageFileChange(e);
-                    }}
-                    style={{ width: '100%' }}
-                  />
+                  <label className="image-embed-btn" htmlFor="embed-image">
+                    Choose Image
+                    <input
+                      type="file"
+                      accept="image/*"
+                      name="image"
+                      id="embed-image"
+                      className="btn"
+                      onChange={e => {
+                        onImageFileChange(e);
+                      }}
+                      style={{ width: '100%' }}
+                    />
+                  </label>
                 </div>
 
                 <input
