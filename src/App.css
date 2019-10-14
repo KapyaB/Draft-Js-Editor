@@ -295,6 +295,7 @@ figure {
 .font-option {
   background: #fff;
   border-style: none;
+  text-align: left;
 }
 
 .font-option:hover {

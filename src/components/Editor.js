@@ -449,8 +449,6 @@ const EditorComp = () => {
     );
   };
 
-  console.log(activeStyles);
-
   return (
     <div className="editor-wrapper">
       <div className="editor-tools">
@@ -468,7 +466,7 @@ const EditorComp = () => {
             </button>
             {showFonts && (
               <div className="font-list">
-                {fonts.map(font => (
+                {fonts.sort().map(font => (
                   <button
                     onClick={() => onFontSelect(font)}
                     key={font}
