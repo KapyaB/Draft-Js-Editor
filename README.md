@@ -1,6 +1,8 @@
 # RichText Editor
 A rich text editor build with Facebook's Draft js framework
 
+![](./public/editor.png)
+
 ## current to-dos:
 - [x] highlight current blockstyle buttons
 - [ ] link embeds
