@@ -19,4 +19,4 @@ A rich text editor build with Facebook's Draft js framework
 - [x] Font family cant be chosen with nothing in editor ()
 - [ ] minor issues with focus when changing font size (details later)
 - [x] custom font size incapacitates headers (H1-H6) -moot
-- [ ] Block style btn remain highlighted when user moves to new unstyled block 
+- [ ] Alignment btn remain highlighted when user moves to different block 

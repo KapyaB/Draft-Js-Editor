@@ -437,7 +437,7 @@ const EditorComp = () => {
       AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, ' ')
     );
   };
-
+  console.log(allBlocks);
   return (
     <div className="editor-wrapper">
       <div className="editor-tools">
