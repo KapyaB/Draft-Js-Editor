@@ -1,5 +1,6 @@
 import React, { useState, useEffect, createRef, Fragment } from 'react';
 import { Map as imutableMap } from 'immutable';
+import { SwatchesPicker } from 'react-color';
 import {
   EditorState,
   RichUtils,
@@ -124,12 +125,15 @@ const EditorComp = () => {
     value: '12'
   });
   const { name, value } = customStyle;
-  const customStyleFn = () => {
+  const customStyleFn = DraftInlineStyle => {
     const { name, value } = customStyle;
     const output = {};
     if (name === 'fontSize') {
       output.fontSize = `${value}px`;
+    } else if (name === 'fontColor') {
+      output.color = `${value}`;
     }
+
     return output;
   };
 
@@ -143,9 +147,20 @@ const EditorComp = () => {
     e.preventDefault();
     setRef(editorRef);
   };
+
+  // font color
+  const handleColorChangeComplete = color => {
+    setFontColor(color);
+    setCustomStyle({ name: 'fontColor', value: color });
+    setShowColors(false);
+    setRef(editorRef);
+  };
+
   // FONT
   const [currFont, setCurrFont] = useState('Arial');
   const [showFonts, setShowFonts] = useState(false);
+  const [showColors, setShowColors] = useState(false);
+  const [fontColor, setFontColor] = useState('#555');
 
   const fonts = [
     'Sans_Serif',
@@ -527,6 +542,42 @@ const EditorComp = () => {
           >
             U
           </button>
+          <button
+            className={`highlight-btn style-btn ${
+              activeStyles.includes('HIGHLIGHT') ? 'active-btn' : null
+            }`}
+            onClick={onHighlightClick}
+          >
+            <i className=" fas fa-highlighter"></i>
+          </button>
+          <div className="color-picker">
+            <button
+              className="current-font-color style-btn"
+              onClick={() => {
+                setShowColors(!showColors);
+                setRef(null);
+              }}
+            >
+              <p className="font-btn">A</p>
+              <span
+                className="color-bar"
+                style={{ background: `${fontColor}` }}
+              ></span>
+            </button>
+            {showColors && (
+              <div
+                className="swatches-wrapper"
+                onMouseOut={() => setRef(editorRef)}
+                onMouseOver={() => setRef(null)}
+              >
+                <SwatchesPicker
+                  onChangeComplete={color =>
+                    handleColorChangeComplete(color.hex)
+                  }
+                />
+              </div>
+            )}
+          </div>
 
           <button
             className={`code-btn style-btn ${
@@ -545,15 +596,6 @@ const EditorComp = () => {
             onClick={onStrikeThroughClick}
           >
             ab
-          </button>
-
-          <button
-            className={`highlight-btn style-btn ${
-              activeStyles.includes('HIGHLIGHT') ? 'active-btn' : null
-            }`}
-            onClick={onHighlightClick}
-          >
-            <i className=" fas fa-highlighter"></i>
           </button>
 
           <button

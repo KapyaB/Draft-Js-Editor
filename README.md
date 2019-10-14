@@ -7,7 +7,7 @@ A rich text editor build with Facebook's Draft js framework
 - [x] highlight current blockstyle buttons
 - [ ] link embeds
 - [ ] canvas
-- [ ] color picker
+- [x] color picker
 - [x] photo upload
 - [ ] audio
 - [ ] hashtag
@@ -23,3 +23,4 @@ A rich text editor build with Facebook's Draft js framework
 - [ ] minor issues with focus when changing font size (details later)
 - [x] custom font size incapacitates headers (H1-H6) -moot
 - [x] Alignment btn remain highlighted when user moves to different block 
+-[ ] font color and size are block styles not inline
