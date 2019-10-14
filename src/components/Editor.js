@@ -347,10 +347,43 @@ const EditorComp = () => {
     imageCaption: '',
     imageDescription: ''
   });
+  const { imageUrl, imageCaption, imageDescription } = imageState;
+
+  // convert to base64
+  const getBase64 = file => {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function() {
+      setFileState({ ...fileState, file: reader.result });
+    };
+
+    reader.onerror = function(error) {
+      console.log('Error: ', error);
+    };
+  };
+
+  // file input
+  const [fileState, setFileState] = useState({
+    file: 'null',
+    fileName: 'Choose file'
+  });
+  const { file, fileName } = fileState;
+
+  // onChange handlers for image form
+
   const handleImageInputChange = e => {
     setImageState({
       ...imageState,
       [e.target.name]: e.target.value
+    });
+  };
+
+  const onImageFileChange = e => {
+    const newFile = e.target.files[0];
+    newFile && getBase64(newFile);
+    setFileState({
+      ...fileState,
+      fileName: newFile ? newFile.name : 'Choose file'
     });
   };
 
@@ -364,23 +397,34 @@ const EditorComp = () => {
     });
   };
 
+  // submit image data
   const handleImageSubmit = e => {
     e.preventDefault();
+    // compose form data
+    const imageData = {
+      imageSrc: file || imageUrl,
+      imageCaption,
+      imageDescription
+    };
+    if (!imageData.imageSrc) {
+      return window.alert('Please select an image');
+    }
     clearForm();
-    onAddImage(e);
+    onAddImage(e, imageData);
   };
 
-  const { imageCaption, imageDescription, imageUrl } = imageState;
   // The functionality for embedding images
-  const onAddImage = e => {
+  const onAddImage = (e, imageData) => {
     e.preventDefault();
     const contentState = editorState.getCurrentContent();
 
+    const { imageSrc, imageCaption, imageDescription } = imageData;
+    console.log(imageData);
     // add entity to contentState
     const contentStateWithEntity = contentState.createEntity(
       'image',
       'IMMUTABLE',
-      { src: imageUrl, caption: imageCaption, desc: imageDescription }
+      { src: imageSrc, caption: imageCaption, desc: imageDescription }
     ); // these are the metadata made available to the Media component in the custome block renderer
 
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
@@ -653,29 +697,41 @@ const EditorComp = () => {
           {imagePrompt && (
             <div className="image-form-container">
               <h2 className="form-head">Add image</h2>
-              <form className="image-form" onSubmit={e => handleImageSubmit(e)}>
-                <input
-                  name="imageUrl"
-                  placeholder="Image link"
-                  value={imageUrl}
-                  type="text"
-                  className="form-input image-url-input"
-                  onChange={e => handleImageInputChange(e)}
-                />
+              <form
+                className="image-form"
+                onSubmit={e => handleImageSubmit(e)}
+                encType="multipart/form-data"
+              >
+                <div className="input-options-wrapper">
+                  <p className="input-hint">Pase a link or upload image</p>
+                  <div className="input-options"></div>
+                  <input
+                    name="imageUrl"
+                    placeholder="Image link"
+                    value={imageUrl}
+                    type="text"
+                    className="form-input image-url-input"
+                    onChange={e => handleImageInputChange(e)}
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    name="image"
+                    id="embed-image"
+                    className="btn"
+                    onChange={e => {
+                      onImageFileChange(e);
+                    }}
+                    style={{ width: '100%' }}
+                  />
+                </div>
+
                 <input
                   type="text"
                   name="imageCaption"
                   placeholder="Image caption"
                   value={imageCaption}
                   className="form-input image-caption-input"
-                  onChange={e => handleImageInputChange(e)}
-                />
-                <textarea
-                  type="text"
-                  name="imageDescription"
-                  placeholder="Image description"
-                  value={imageDescription}
-                  className="form-input image-desc-input"
                   onChange={e => handleImageInputChange(e)}
                 />
                 <div className="form-btns">

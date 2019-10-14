@@ -31,11 +31,8 @@ const Image = props => {
     const { src, caption, desc } = props;
     return (
       <div className="embedded-image">
-        <div className="image-n-caption">
-          <img src={src} className="embedded-img" alt="" />
-          <small className="caption unselectable">{caption}</small>
-        </div>
-        <p className="image-description unselectable">{desc}</p>
+        <img src={src} className="embedded-img" alt="" />
+        <small className="caption unselectable">{caption}</small>
       </div>
     );
   }
