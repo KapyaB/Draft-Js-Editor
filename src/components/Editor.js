@@ -258,20 +258,19 @@ const EditorComp = () => {
   };
 
   // TEXT ALIGNMENT
-  const [currAlignment, setCurrAlignment] = useState('');
-  const onAlignClick = alignment => {
-    // get all blocks
-    const allBlocks = document.getElementsByClassName(
-      'public-DraftStyleDefault-block'
-    );
+  const allBlockNodes = document.getElementsByClassName(
+    'public-DraftStyleDefault-block'
+  );
 
-    /*
+  /*
       get selected or new block using anchor key and the "data-offset-key" attribute(from draft) 
       the first set of chars in the data offset key is the same as the block's anchor key.
     */
 
+  const onAlignClick = alignment => {
+    // get all blocks
     var myBlock;
-    [...allBlocks].map(block => {
+    [...allBlockNodes].map(block => {
       const anchorKey = block.getAttribute('data-offset-key').split('-')[0];
       const selectedBlockKey = editorState.getSelection().getAnchorKey();
       // check if the two keya re equal
@@ -286,7 +285,6 @@ const EditorComp = () => {
       classes.remove(classes[2]);
     }
     classes.add(alignment);
-    setCurrAlignment(alignment);
   };
 
   // key binding
@@ -318,12 +316,25 @@ const EditorComp = () => {
   const allBlocks = convertToRaw(editorState.getCurrentContent()).blocks;
   const selectedKey = editorState.getSelection().getAnchorKey();
   const selectedBlock = allBlocks.find(block => block.key === selectedKey);
+  const selectedBlockNode = [...allBlockNodes].find(
+    node => node.getAttribute('data-offset-key').split('-')[0] === selectedKey
+  );
   const currentInlineStyles = selectedBlock.inlineStyleRanges; //array of objects
   const currentBlockStyle = selectedBlock.type;
   const selectionOffset = editorState.getSelection().getAnchorOffset(); // position of cursor or start of selection
 
   // add to array
   var activeStyles = [];
+
+  // remove alignment highlight
+  if (selectedBlockNode) {
+    if (selectedBlockNode.classList.length > 2) {
+      const alignStyle = selectedBlockNode.classList[2];
+      !activeStyles.includes(alignStyle) && activeStyles.push(alignStyle);
+    } else {
+    }
+  }
+
   activeStyles.push(currentBlockStyle);
   currentInlineStyles.filter(inlineStyle => {
     const { offset, length, style } = inlineStyle;
@@ -358,7 +369,7 @@ const EditorComp = () => {
     };
 
     reader.onerror = function(error) {
-      console.log('Error: ', error);
+      window.alert('Something went wrong with the image');
     };
   };
 
@@ -437,7 +448,9 @@ const EditorComp = () => {
       AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, ' ')
     );
   };
-  console.log(allBlocks);
+
+  console.log(activeStyles);
+
   return (
     <div className="editor-wrapper">
       <div className="editor-tools">
@@ -610,7 +623,7 @@ const EditorComp = () => {
           <div className="align-tools">
             <button
               className={`align-left style-btn ${
-                currAlignment === 'align-left' ? 'active-btn' : null
+                activeStyles.includes('align-left') ? 'active-btn' : null
               }`}
               onClick={() => onAlignClick('align-left')}
             >
@@ -618,7 +631,7 @@ const EditorComp = () => {
             </button>
             <button
               className={`align-center style-btn ${
-                currAlignment === 'align-center' ? 'active-btn' : null
+                activeStyles.includes('align-center') ? 'active-btn' : null
               }`}
               onClick={() => onAlignClick('align-center')}
             >
@@ -626,7 +639,7 @@ const EditorComp = () => {
             </button>
             <button
               className={`align-right style-btn ${
-                currAlignment === 'align-right' ? 'active-btn' : null
+                activeStyles.includes('align-right') ? 'active-btn' : null
               }`}
               onClick={() => onAlignClick('align-right')}
             >
@@ -634,7 +647,7 @@ const EditorComp = () => {
             </button>
             <button
               className={`align-justify style-btn ${
-                currAlignment === 'align-justify' ? 'active-btn' : null
+                activeStyles.includes('align-justify') ? 'active-btn' : null
               }`}
               onClick={() => onAlignClick('align-justify')}
             >
