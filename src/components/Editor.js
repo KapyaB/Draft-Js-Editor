@@ -495,159 +495,163 @@ const EditorComp = () => {
 
   return (
     <div className="editor-wrapper">
-      <div className="editor-tools">
-        <div className="undo-redo">
-          <UndoButton />
-          <RedoButton />
-        </div>
-        <div className="font-styles">
-          <div className="font-selector">
-            <button
-              className="current-font"
-              onClick={() => setShowFonts(!showFonts)}
-            >
-              {currFont.replace(/_/g, ' ')} <i className="fas fa-sort-down"></i>
-            </button>
-            {showFonts && (
-              <div className="font-list">
-                {fonts.sort().map(font => (
-                  <button
-                    onClick={() => onFontSelect(font)}
-                    key={font}
-                    value={font}
-                    className="font-option"
-                  >
-                    {font.replace(/_/g, ' ')}
-                  </button>
-                ))}
-              </div>
-            )}
+      <div className="editor-tools-wrapper">
+        <div className="editor-tools">
+          <div className="undo-redo">
+            <UndoButton />
+            <RedoButton />
           </div>
-          <form
-            className="font-size-form"
-            onSubmit={e => handleFontSizeSubmit(e)}
-          >
-            <input
-              type="number"
-              min="1"
-              step="1"
-              placeholder="font size"
-              className="font-size-input"
-              onChange={e => handleFontSizeChange(e)}
-              name="fontSize"
-              value={value}
-              onFocus={() => setRef(null)}
-              onMouseOver={() => setRef(null)}
-            />
-            <button type="submit" className="set-font-size">
-              <i className="far fa-check-circle"></i>
-            </button>
-          </form>
-        </div>
-        <div className="inline-styles">
-          <button
-            className={`bold-btn style-btn ${
-              activeStyles.includes('BOLD') ? 'active-btn' : null
-            }`}
-            onClick={() => onBoldclick()}
-          >
-            <strong>B</strong>
-          </button>
-
-          <button
-            className={`italic-btn style-btn ${
-              activeStyles.includes('ITALIC') ? 'active-btn' : null
-            }`}
-            onClick={onItalicClick}
-          >
-            <em>I</em>
-          </button>
-
-          <button
-            className={`underline-btn style-btn ${
-              activeStyles.includes('UNDERLINE') ? 'active-btn' : null
-            }`}
-            style={{ textDecoration: 'underline' }}
-            onClick={onUnderlineClick}
-          >
-            U
-          </button>
-          <button
-            className={`highlight-btn style-btn ${
-              activeStyles.includes('HIGHLIGHT') ? 'active-btn' : null
-            }`}
-            onClick={onHighlightClick}
-          >
-            <i className=" fas fa-highlighter"></i>
-          </button>
-          <div className="color-picker">
-            <button
-              className="current-font-color style-btn"
-              onClick={() => {
-                setShowColors(!showColors);
-                setRef(null);
-              }}
-            >
-              <p className="font-btn">A</p>
-              <span
-                className="color-bar"
-                style={{ background: `${currentFontColor || '#333'}` }}
-              ></span>
-            </button>
-            {showColors && (
-              <div
-                className="swatches-wrapper"
-                onMouseOut={() => setRef(editorRef)}
-                onMouseOver={() => setRef(null)}
+          <div className="font-styles">
+            <div className="font-selector">
+              <button
+                className=" current-font style-btn"
+                onClick={() => setShowFonts(!showFonts)}
               >
-                <SwatchesPicker
-                  onChangeComplete={color =>
-                    handleColorChangeComplete(color.hex)
-                  }
-                />
-              </div>
-            )}
+                {currFont.replace(/_/g, ' ')}{' '}
+                <i className="fas fa-sort-down"></i>
+              </button>
+              {showFonts && (
+                <div className="font-list">
+                  {fonts.sort().map(font => (
+                    <button
+                      onClick={() => onFontSelect(font)}
+                      key={font}
+                      value={font}
+                      className="font-option"
+                    >
+                      {font.replace(/_/g, ' ')}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <form
+              className="font-size-form style-btn "
+              onSubmit={e => handleFontSizeSubmit(e)}
+            >
+              <input
+                type="number"
+                min="1"
+                step="1"
+                placeholder="font size"
+                className="font-size-input"
+                onChange={e => handleFontSizeChange(e)}
+                name="fontSize"
+                value={value}
+                onFocus={() => setRef(null)}
+                onMouseOver={() => setRef(null)}
+              />
+              <button type="submit" className="set-font-size">
+                <i className="far fa-check-circle"></i>
+              </button>
+            </form>
           </div>
+          <div className="inline-styles">
+            <button
+              className={`bold-btn style-btn ${
+                activeStyles.includes('BOLD') ? 'active-btn' : null
+              }`}
+              onClick={() => onBoldclick()}
+            >
+              <i className="fas fa-bold"></i>
+            </button>
 
-          <button
-            className={`code-btn style-btn ${
-              activeStyles.includes('CODE') ? 'active-btn' : null
-            }`}
-            onClick={onCodeClick}
-          >
-            {'<>'}
-          </button>
+            <button
+              className={`italic-btn style-btn ${
+                activeStyles.includes('ITALIC') ? 'active-btn' : null
+              }`}
+              onClick={onItalicClick}
+            >
+              <i className="fas fa-italic"></i>
+            </button>
 
-          <button
-            className={`strike-through-btn style-btn ${
-              activeStyles.includes('STRIKETHROUGH') ? 'active-btn' : null
-            }`}
-            style={{ textDecoration: 'line-through' }}
-            onClick={onStrikeThroughClick}
-          >
-            ab
-          </button>
+            <button
+              className={`underline-btn style-btn ${
+                activeStyles.includes('UNDERLINE') ? 'active-btn' : null
+              }`}
+              style={{ textDecoration: 'underline' }}
+              onClick={onUnderlineClick}
+            >
+              <i className="fas fa-underline"></i>
+            </button>
+            <button
+              className={`highlight-btn style-btn ${
+                activeStyles.includes('HIGHLIGHT') ? 'active-btn' : null
+              }`}
+              onClick={onHighlightClick}
+            >
+              <i className=" fas fa-highlighter"></i>
+            </button>
+            <div className="color-picker">
+              <button
+                className="current-font-color style-btn"
+                onClick={() => {
+                  setShowColors(!showColors);
+                  setRef(null);
+                }}
+              >
+                <p className="font-btn">
+                  <i className="fas fa-font"></i>
+                </p>
+                <span
+                  className="color-bar"
+                  style={{ background: `${currentFontColor || '#333'}` }}
+                ></span>
+              </button>
+              {showColors && (
+                <div
+                  className="swatches-wrapper"
+                  onMouseOut={() => setRef(editorRef)}
+                  onMouseOver={() => setRef(null)}
+                >
+                  <SwatchesPicker
+                    onChangeComplete={color =>
+                      handleColorChangeComplete(color.hex)
+                    }
+                  />
+                </div>
+              )}
+            </div>
 
-          <button
-            className={`superscript-btn style-btn ${
-              activeStyles.includes('SUPERSCRIPT') ? 'active-btn' : null
-            }`}
-            onClick={onSuperScriptClick}
-          >
-            X<sup>2</sup>
-          </button>
+            <button
+              className={`code-btn style-btn ${
+                activeStyles.includes('CODE') ? 'active-btn' : null
+              }`}
+              onClick={onCodeClick}
+            >
+              <i className="fas fa-code"></i>
+            </button>
 
-          <button
-            className={`subscript-btn style-btn ${
-              activeStyles.includes('SUBSCRIPT') ? 'active-btn' : null
-            }`}
-            onClick={onSubScriptClick}
-          >
-            X<sub>2</sub>
-          </button>
-        </div>
-        <div className="block-styles">
-          {/* <div className="headers">
+            <button
+              className={`strike-through-btn style-btn ${
+                activeStyles.includes('STRIKETHROUGH') ? 'active-btn' : null
+              }`}
+              style={{ textDecoration: 'line-through' }}
+              onClick={onStrikeThroughClick}
+            >
+              <i className="fas fa-strikethrough"></i>
+            </button>
+
+            <button
+              className={`superscript-btn style-btn ${
+                activeStyles.includes('SUPERSCRIPT') ? 'active-btn' : null
+              }`}
+              onClick={onSuperScriptClick}
+            >
+              <i className="fas fa-superscript"></i>
+            </button>
+
+            <button
+              className={`subscript-btn style-btn ${
+                activeStyles.includes('SUBSCRIPT') ? 'active-btn' : null
+              }`}
+              onClick={onSubScriptClick}
+            >
+              <i className="fas fa-subscript"></i>
+            </button>
+          </div>
+          <div className="block-styles">
+            {/* <div className="headers">
             <button
               className={`h1-btn style-btn ${
                 activeStyles.includes('header-one') ? 'active-btn' : null
@@ -657,82 +661,88 @@ const EditorComp = () => {
               H1
             </button>
           </div> */}
-          <button
-            className={`blockquote-btn style-btn ${
-              activeStyles.includes('blockquote') ? 'active-btn' : null
-            }`}
-            onClick={onBlockquoteClick}
-          >
-            <i className="fas fa-quote-right"></i>
-          </button>
-          <button
-            className={`codeblock-btn style-btn ${
-              activeStyles.includes('code-block') ? 'active-btn' : null
-            }`}
-            onClick={onCodeBlockClick}
-          >
-            code
-          </button>
+            <button
+              className={`blockquote-btn style-btn ${
+                activeStyles.includes('blockquote') ? 'active-btn' : null
+              }`}
+              onClick={onBlockquoteClick}
+            >
+              <i className="fas fa-quote-left"></i>
+            </button>
+            <button
+              className={`codeblock-btn style-btn ${
+                activeStyles.includes('code-block') ? 'active-btn' : null
+              }`}
+              onClick={onCodeBlockClick}
+            >
+              code
+            </button>
 
-          <button
-            className={`ordered-btn style-btn ${
-              activeStyles.includes('ordered-list-item') ? 'active-btn' : null
-            }`}
-            onClick={onOLClick}
-          >
-            <i className="fas fa-list-ol"></i>
-          </button>
-          <button
-            className={`unordered-btn style-btn ${
-              activeStyles.includes('unordered-list-item') ? 'active-btn' : null
-            }`}
-            onClick={onULClick}
-          >
-            <i className="fas fa-list"></i>
-          </button>
-          <div className="align-tools">
             <button
-              className={`align-left style-btn ${
-                activeStyles.includes('align-left') ? 'active-btn' : null
+              className={`ordered-btn style-btn ${
+                activeStyles.includes('ordered-list-item') ? 'active-btn' : null
               }`}
-              onClick={() => onAlignClick('align-left')}
+              onClick={onOLClick}
             >
-              <i className="fas fa-align-left"></i>
+              <i className="fas fa-list-ol"></i>
             </button>
             <button
-              className={`align-center style-btn ${
-                activeStyles.includes('align-center') ? 'active-btn' : null
+              className={`unordered-btn style-btn ${
+                activeStyles.includes('unordered-list-item')
+                  ? 'active-btn'
+                  : null
               }`}
-              onClick={() => onAlignClick('align-center')}
+              onClick={onULClick}
             >
-              <i className="fas fa-align-center"></i>
+              <i className="fas fa-list"></i>
             </button>
+            <div className="align-tools">
+              <button
+                className={`align-left style-btn ${
+                  activeStyles.includes('align-left') ? 'active-btn' : null
+                }`}
+                onClick={() => onAlignClick('align-left')}
+              >
+                <i className="fas fa-align-left"></i>
+              </button>
+              <button
+                className={`align-center style-btn ${
+                  activeStyles.includes('align-center') ? 'active-btn' : null
+                }`}
+                onClick={() => onAlignClick('align-center')}
+              >
+                <i className="fas fa-align-center"></i>
+              </button>
+              <button
+                className={`align-right style-btn ${
+                  activeStyles.includes('align-right') ? 'active-btn' : null
+                }`}
+                onClick={() => onAlignClick('align-right')}
+              >
+                <i className="fas fa-align-right"></i>
+              </button>
+              <button
+                className={`align-justify style-btn ${
+                  activeStyles.includes('align-justify') ? 'active-btn' : null
+                }`}
+                onClick={() => onAlignClick('align-justify')}
+              >
+                <i className="fas fa-align-justify"></i>
+              </button>
+            </div>
             <button
-              className={`align-right style-btn ${
-                activeStyles.includes('align-right') ? 'active-btn' : null
-              }`}
-              onClick={() => onAlignClick('align-right')}
+              className="style-btn add-image-btn"
+              onClick={() => {
+                setImagePrompt(!imagePrompt);
+                setRef(null);
+              }}
             >
-              <i className="fas fa-align-right"></i>
-            </button>
-            <button
-              className={`align-justify style-btn ${
-                activeStyles.includes('align-justify') ? 'active-btn' : null
-              }`}
-              onClick={() => onAlignClick('align-justify')}
-            >
-              <i className="fas fa-align-justify"></i>
+              <i className="far fa-image"></i>
             </button>
           </div>
-          <button
-            className="style-btn add-image-btn"
-            onClick={() => {
-              setImagePrompt(!imagePrompt);
-              setRef(null);
-            }}
-          >
-            <i className="far fa-image"></i>
-          </button>
+          {/* <div className="emojis">
+            <EmojiSelect />
+          </div> */}
         </div>
       </div>
       <div className="editor-container">
@@ -750,20 +760,8 @@ const EditorComp = () => {
           onChange={setEditorState}
           placeholder="Whats on your mind?"
           spellCheck={true}
-          ref={ref}
+          ref={editorRef}
         />
-        <InlineToolbar>
-          {// may be use React.Fragment instead of div to improve perfomance after React 16
-          externalProps => (
-            <Fragment>
-              <BoldButton {...externalProps} />
-              <ItalicButton {...externalProps} />
-              <UnderlineButton {...externalProps} />
-              <linkPlugin.LinkButton {...externalProps} />
-            </Fragment>
-          )}
-        </InlineToolbar>
-        <EmojiSuggestions />
         <div className="counters-wrapper">
           <div className="counter-container">
             <CharCounter limit={200} /> characters
@@ -775,63 +773,75 @@ const EditorComp = () => {
             <LineCounter limit={10} /> lines
           </div>
         </div>
-        <div className="emoji-selection">
-          <EmojiSelect />
-          {imagePrompt && (
-            <div className="image-form-container">
-              <h2 className="form-head">Add image</h2>
-              <form
-                className="image-form"
-                onSubmit={e => handleImageSubmit(e)}
-                encType="multipart/form-data"
-              >
-                <div className="input-options-wrapper">
-                  <p className="input-hint">Pase a link or upload image</p>
-                  <div className="input-options"></div>
-                  <input
-                    name="imageUrl"
-                    placeholder="Image link"
-                    value={imageUrl}
-                    type="text"
-                    className="form-input image-url-input"
-                    onChange={e => handleImageInputChange(e)}
-                  />
-                  <label className="image-embed-btn" htmlFor="embed-image">
-                    Choose Image
-                    <input
-                      type="file"
-                      accept="image/*"
-                      name="image"
-                      id="embed-image"
-                      className="btn"
-                      onChange={e => {
-                        onImageFileChange(e);
-                      }}
-                      style={{ width: '100%' }}
-                    />
-                  </label>
-                </div>
+        {/* <EmojiSuggestions /> */}
+        <InlineToolbar>
+          {// may be use React.Fragment instead of div to improve perfomance after React 16
+          externalProps => (
+            <Fragment>
+              <BoldButton {...externalProps} />
+              <ItalicButton {...externalProps} />
+              <UnderlineButton {...externalProps} />
+              <linkPlugin.LinkButton {...externalProps} />
+            </Fragment>
+          )}
+        </InlineToolbar>
 
+        {/* <div className="emoji-selection"> */}
+
+        {imagePrompt && (
+          <div className="image-form-container">
+            <h2 className="form-head">Add image</h2>
+            <form
+              className="image-form"
+              onSubmit={e => handleImageSubmit(e)}
+              encType="multipart/form-data"
+            >
+              <div className="input-options-wrapper">
+                <p className="input-hint">Pase a link or upload image</p>
+                <div className="input-options"></div>
                 <input
+                  name="imageUrl"
+                  placeholder="Image link"
+                  value={imageUrl}
                   type="text"
-                  name="imageCaption"
-                  placeholder="Image caption"
-                  value={imageCaption}
-                  className="form-input image-caption-input"
+                  className="form-input image-url-input"
                   onChange={e => handleImageInputChange(e)}
                 />
-                <div className="form-btns">
-                  <button type="submit" className="green-btn">
-                    Add image
-                  </button>
-                  <button onClick={() => clearForm()} className="red-btn">
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            </div>
-          )}
-        </div>
+                <label className="image-embed-btn" htmlFor="embed-image">
+                  Choose Image
+                  <input
+                    type="file"
+                    accept="image/*"
+                    name="image"
+                    id="embed-image"
+                    className="btn"
+                    onChange={e => {
+                      onImageFileChange(e);
+                    }}
+                    style={{ width: '100%' }}
+                  />
+                </label>
+              </div>
+
+              <input
+                type="text"
+                name="imageCaption"
+                placeholder="Image caption"
+                value={imageCaption}
+                className="form-input image-caption-input"
+                onChange={e => handleImageInputChange(e)}
+              />
+              <div className="form-btns">
+                <button type="submit" className="green-btn">
+                  Add image
+                </button>
+                <button onClick={() => clearForm()} className="red-btn">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );
