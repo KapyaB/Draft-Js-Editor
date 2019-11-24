@@ -1,77 +1,43 @@
-import React, { useState, useEffect, createRef, Fragment } from 'react';
-import { Map as imutableMap } from 'immutable';
-import { SwatchesPicker } from 'react-color';
-import createStyles from 'draft-js-custom-styles';
+import React, { useState, useEffect, createRef, Fragment } from "react";
+import { SwatchesPicker } from "react-color";
+import createStyles from "draft-js-custom-styles";
 import {
   EditorState,
   RichUtils,
   AtomicBlockUtils,
   convertToRaw,
-  DefaultDraftBlockRenderMap,
   getDefaultKeyBinding
-} from 'draft-js';
-import Editor from 'draft-js-plugins-editor';
-import createInlineToolbarPlugin from 'draft-js-inline-toolbar-plugin';
-import createLinkPlugin from 'draft-js-anchor-plugin';
-import createUndoPlugin from 'draft-js-undo-plugin';
-import createCounterPlugin from 'draft-js-counter-plugin';
-import createEmojiPlugin from 'draft-js-emoji-plugin';
-
-import { ItalicButton, BoldButton, UnderlineButton } from 'draft-js-buttons';
+} from "draft-js";
+import Editor from "draft-js-plugins-editor";
+import createInlineToolbarPlugin from "draft-js-inline-toolbar-plugin";
+import createLinkPlugin from "draft-js-anchor-plugin";
+import createEmojiPlugin from "draft-js-emoji-plugin";
 
 // import 'draft-js/dist/Draft.css';
-import 'draft-js-inline-toolbar-plugin/lib/plugin.css';
-import 'draft-js-emoji-plugin/lib/plugin.css';
+import "draft-js-inline-toolbar-plugin/lib/plugin.css";
+import "draft-js-emoji-plugin/lib/plugin.css";
 
-import { mediaBlockRenderer } from './entities/mediaBlockRenderer';
-import styleMap from '../data/inlineStyles';
+import styleMap from "../data/inlineStyles";
 
 // ADDING LINK
 const linkPlugin = createLinkPlugin({
-  placeholder: 'https://...'
+  placeholder: "https://..."
 });
 
 // INLINE TOOLBAR
 //  At this step, a configuration object can be passed in as an argument.
 const inlineToolbarPlugin = createInlineToolbarPlugin({
-  structure: [BoldButton, ItalicButton, UnderlineButton, linkPlugin.LinkButton]
+  structure: [linkPlugin.LinkButton]
 });
 const { InlineToolbar } = inlineToolbarPlugin;
-
-// CUSTOM PLUGIN THEME
-const theme = {
-  undo: 'style-btn',
-  redo: 'style-btn',
-  counter: 'counter',
-  counterOverLimit: 'counter-overLimit'
-};
-
-// UNDO REDO
-const undoPlugin = createUndoPlugin({
-  undoContent: 'Undo',
-  redoContent: 'Redo',
-  theme
-});
-const { UndoButton, RedoButton } = undoPlugin;
-
-// COUNTERS
-const counterPlugin = createCounterPlugin({ theme });
-const { CharCounter, WordCounter, LineCounter } = counterPlugin;
 
 // EMOJIS
 const emojiPlugin = createEmojiPlugin({
   useNativeArt: false
 });
-const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
 
 // plugins list
-const plugins = [
-  inlineToolbarPlugin,
-  linkPlugin,
-  undoPlugin,
-  counterPlugin,
-  emojiPlugin
-];
+const plugins = [inlineToolbarPlugin, linkPlugin, emojiPlugin];
 
 // editor ref
 const editorRef = createRef();
@@ -92,21 +58,21 @@ const EditorComp = () => {
 
     const newState = RichUtils.handleKeyCommand(editorState, command);
 
-    if (typeof command === 'object') {
+    if (typeof command === "object") {
       const { cmd, e } = command;
-      if (cmd === 'tab') {
+      if (cmd === "tab") {
         onTab(e);
       }
 
-      return 'handled';
+      return "handled";
     }
 
     if (newState) {
       setEditorState(newState);
-      return 'handled';
+      return "handled";
     }
 
-    return 'not-handled';
+    return "not-handled";
   };
 
   // ref state
@@ -122,26 +88,15 @@ const EditorComp = () => {
   //  Styling controls
   // custom style function
   const [customStyle, setCustomStyle] = useState({
-    name: '',
-    value: '12'
+    name: "",
+    value: "12"
   });
   const { name, value } = customStyle;
-  // const customStyleFn = DraftInlineStyle => {
-  //   const { name, value } = customStyle;
-  //   const output = {};
-  //   if (name === 'fontSize') {
-  //     output.fontSize = `${value}px`;
-  //   } else if (name === 'fontColor') {
-  //     output.color = `${value}`;
-  //   }
 
-  //   return output;
-  // };
-
-  const customStylesToManage = ['font-size', 'color'];
+  const customStylesToManage = ["font-size", "color"];
   const { styles, customStyleFn } = createStyles(
     customStylesToManage,
-    'CUSTOM_'
+    "CUSTOM_"
   );
   // 'CUSTOM_' will be the prefix of my styles
 
@@ -167,31 +122,31 @@ const EditorComp = () => {
   };
 
   // FONT
-  const [currFont, setCurrFont] = useState('Arial');
+  const [currFont, setCurrFont] = useState("Roboto");
   const [showFonts, setShowFonts] = useState(false);
   const [showColors, setShowColors] = useState(false);
 
   const fonts = [
-    'Sans_Serif',
-    'Roboto',
-    'Open_Sans',
-    'Times_New_Roman',
-    'Georgia',
-    'Arial',
-    'Verdana',
-    'Courier_New',
-    'Lucida_Console',
-    'Barlow',
-    'Dancing_Script',
-    'Inconsolata',
-    'Lato',
-    'Libre_Baskerville',
-    'Montserrat',
-    'Pacifico',
-    'Lobster',
-    'Raleway',
-    'Roboto_Mono',
-    'SourceSans_Pro'
+    "Sans_Serif",
+    "Roboto",
+    "Open_Sans",
+    "Times_New_Roman",
+    "Georgia",
+    "Arial",
+    "Verdana",
+    "Courier_New",
+    "Lucida_Console",
+    "Barlow",
+    "Dancing_Script",
+    "Inconsolata",
+    "Lato",
+    "Libre_Baskerville",
+    "Montserrat",
+    "Pacifico",
+    "Lobster",
+    "Raleway",
+    "Roboto_Mono",
+    "SourceSans_Pro"
   ];
   const onFontSelect = font => {
     setCurrFont(font);
@@ -201,42 +156,42 @@ const EditorComp = () => {
 
   // BOLD
   const onBoldclick = () => {
-    setEditorState(RichUtils.toggleInlineStyle(editorState, 'BOLD'));
+    setEditorState(RichUtils.toggleInlineStyle(editorState, "BOLD"));
   };
 
   // ITALICS
   const onItalicClick = () => {
-    setEditorState(RichUtils.toggleInlineStyle(editorState, 'ITALIC'));
+    setEditorState(RichUtils.toggleInlineStyle(editorState, "ITALIC"));
   };
 
   // UNDERLINE
   const onUnderlineClick = () => {
-    setEditorState(RichUtils.toggleInlineStyle(editorState, 'UNDERLINE'));
+    setEditorState(RichUtils.toggleInlineStyle(editorState, "UNDERLINE"));
   };
 
   // CODE
   const onCodeClick = () => {
-    setEditorState(RichUtils.toggleInlineStyle(editorState, 'CODE'));
+    setEditorState(RichUtils.toggleInlineStyle(editorState, "CODE"));
   };
 
   // STRIKE THROUGH
   const onStrikeThroughClick = () => {
-    setEditorState(RichUtils.toggleInlineStyle(editorState, 'STRIKETHROUGH'));
+    setEditorState(RichUtils.toggleInlineStyle(editorState, "STRIKETHROUGH"));
   };
 
   // HIGHLIGHT
   const onHighlightClick = () => {
-    setEditorState(RichUtils.toggleInlineStyle(editorState, 'HIGHLIGHT'));
+    setEditorState(RichUtils.toggleInlineStyle(editorState, "HIGHLIGHT"));
   };
 
   // SUPERSCRIPT
   const onSuperScriptClick = () => {
-    setEditorState(RichUtils.toggleInlineStyle(editorState, 'SUPERSCRIPT'));
+    setEditorState(RichUtils.toggleInlineStyle(editorState, "SUPERSCRIPT"));
   };
 
   // SUBSCRIPT
   const onSubScriptClick = () => {
-    setEditorState(RichUtils.toggleInlineStyle(editorState, 'SUBSCRIPT'));
+    setEditorState(RichUtils.toggleInlineStyle(editorState, "SUBSCRIPT"));
   };
 
   // BLOCKSTYLES
@@ -246,75 +201,56 @@ const EditorComp = () => {
       default:
         return;
 
-      case 'blockquote':
-        return 'my-blockquote';
+      case "blockquote":
+        return "my-blockquote";
 
-      case 'code-block':
-        return 'my-codeblock';
+      case "code-block":
+        return "my-codeblock";
 
-      case 'align-left':
-        return 'align-block-left';
+      case "title":
+        return "my-title";
+
+      case "subheading":
+        return "my-subheading";
     }
   }
-  // // HEADERS (e.g.)
-  // const onH1Click = () => {
-  //   setEditorState(RichUtils.toggleBlockType(editorState, 'header-one'));
-  // };
+  // HEADERS (e.g.)
+  const onTitleClick = () => {
+    setEditorState(RichUtils.toggleBlockType(editorState, "title"));
+  };
+  const onSubheadingClick = () => {
+    setEditorState(RichUtils.toggleBlockType(editorState, "subheading"));
+  };
 
   // BLOCKQUOTE
   const onBlockquoteClick = () => {
-    setEditorState(RichUtils.toggleBlockType(editorState, 'blockquote'));
+    setEditorState(RichUtils.toggleBlockType(editorState, "blockquote"));
   };
 
   // CODE BLOCK
   const onCodeBlockClick = () => {
-    setEditorState(RichUtils.toggleBlockType(editorState, 'code-block'));
+    setEditorState(RichUtils.toggleBlockType(editorState, "code-block"));
   };
 
   // LISTS
   const onOLClick = () => {
-    setEditorState(RichUtils.toggleBlockType(editorState, 'ordered-list-item'));
+    setEditorState(RichUtils.toggleBlockType(editorState, "ordered-list-item"));
   };
   const onULClick = () => {
     setEditorState(
-      RichUtils.toggleBlockType(editorState, 'unordered-list-item')
+      RichUtils.toggleBlockType(editorState, "unordered-list-item")
     );
   };
-
-  // TEXT ALIGNMENT
-  const allBlockNodes = document.getElementsByClassName(
-    'public-DraftStyleDefault-block'
-  );
 
   /*
       get selected or new block using anchor key and the "data-offset-key" attribute(from draft) 
       the first set of chars in the data offset key is the same as the block's anchor key.
     */
 
-  const onAlignClick = alignment => {
-    // get all blocks
-    var myBlock;
-    [...allBlockNodes].map(block => {
-      const anchorKey = block.getAttribute('data-offset-key').split('-')[0];
-      const selectedBlockKey = editorState.getSelection().getAnchorKey();
-      // check if the two keya re equal
-      if (anchorKey === selectedBlockKey) {
-        myBlock = block;
-      }
-      return myBlock;
-    });
-    const classes = myBlock.classList;
-    // remove previously added (default has only two classes, so remove 3rd)
-    if (classes.length > 2) {
-      classes.remove(classes[2]);
-    }
-    classes.add(alignment);
-  };
-
   // key binding
   const keyBindingFn = e => {
     if (e.keyCode === 9) {
-      return { cmd: 'tab', e };
+      return { cmd: "tab", e };
     }
     return getDefaultKeyBinding(e);
   };
@@ -324,24 +260,15 @@ const EditorComp = () => {
     setEditorState(RichUtils.onTab(e, editorState, maxDepth));
   };
 
-  // CUSTTOM BLOCKS
-  const blockRenderMap = imutableMap({
-    'align-left': {
-      element: 'div'
-      // can have a wrapper property - a react component that wraps this component
-    }
-  });
-
-  const extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(
-    blockRenderMap
-  );
-
   // Keep track of active styles
+  const allBlockNodes = document.getElementsByClassName(
+    "public-DraftStyleDefault-block"
+  );
   const allBlocks = convertToRaw(editorState.getCurrentContent()).blocks;
   const selectedKey = editorState.getSelection().getAnchorKey();
   const selectedBlock = allBlocks.find(block => block.key === selectedKey);
   const selectedBlockNode = [...allBlockNodes].find(
-    node => node.getAttribute('data-offset-key').split('-')[0] === selectedKey
+    node => node.getAttribute("data-offset-key").split("-")[0] === selectedKey
   );
   const currentInlineStyles = selectedBlock.inlineStyleRanges; //array of objects
   const currentBlockStyle = selectedBlock.type;
@@ -378,9 +305,9 @@ const EditorComp = () => {
 
   // image form
   const [imageState, setImageState] = useState({
-    imageUrl: '',
-    imageCaption: '',
-    imageDescription: ''
+    imageUrl: "",
+    imageCaption: "",
+    imageDescription: ""
   });
   const { imageUrl, imageCaption, imageDescription } = imageState;
 
@@ -396,14 +323,14 @@ const EditorComp = () => {
     };
 
     reader.onerror = function(error) {
-      window.alert('Something went wrong with the image');
+      window.alert("Something went wrong with the image");
     };
   };
 
   // file input
   const [fileState, setFileState] = useState({
-    file: 'null',
-    fileName: 'Choose file'
+    file: "null",
+    fileName: "Choose file"
   });
   const { file, fileName } = fileState;
 
@@ -421,7 +348,7 @@ const EditorComp = () => {
     newFile && getBase64(newFile);
     setFileState({
       ...fileState,
-      fileName: newFile ? newFile.name : 'Choose file'
+      fileName: newFile ? newFile.name : "Choose file"
     });
   };
 
@@ -429,9 +356,9 @@ const EditorComp = () => {
     setImagePrompt(false);
     setRef(editorRef);
     setImageState({
-      imageCaption: '',
-      imageDescription: '',
-      imageUrl: ''
+      imageCaption: "",
+      imageDescription: "",
+      imageUrl: ""
     });
   };
 
@@ -445,7 +372,7 @@ const EditorComp = () => {
       imageDescription
     };
     if (!imageData.imageSrc) {
-      return window.alert('Please select an image');
+      return window.alert("Please select an image");
     }
     clearForm();
     onAddImage(e, imageData);
@@ -460,8 +387,8 @@ const EditorComp = () => {
     console.log(imageData);
     // add entity to contentState
     const contentStateWithEntity = contentState.createEntity(
-      'image',
-      'IMMUTABLE',
+      "image",
+      "IMMUTABLE",
       {
         src: imageSrc,
         caption: imageCaption,
@@ -473,41 +400,33 @@ const EditorComp = () => {
     const newEditorState = EditorState.set(
       editorState,
       { currentContent: contentStateWithEntity },
-      'create-entity'
+      "create-entity"
     );
     setEditorState(
-      AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, ' ')
+      AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, " ")
     );
   };
 
-  // console.log('Start offset: ', editorState.getSelection().getStartOffset());
-
-  // console.log('End offset: ', editorState.getSelection().getEndOffset());
-
   // current font color
   const currentFontColorName = activeStyles.find(
-    style => style.charAt(13) === '#'
+    style => style.charAt(13) === "#"
   );
   var currentFontColor;
   if (currentFontColorName) {
-    currentFontColor = currentFontColorName.split('_')[2];
+    currentFontColor = currentFontColorName.split("_")[2];
   }
 
   return (
     <div className="editor-wrapper">
       <div className="editor-tools-wrapper">
         <div className="editor-tools">
-          <div className="undo-redo">
-            <UndoButton />
-            <RedoButton />
-          </div>
           <div className="font-styles">
             <div className="font-selector">
               <button
                 className=" current-font style-btn"
                 onClick={() => setShowFonts(!showFonts)}
               >
-                {currFont.replace(/_/g, ' ')}{' '}
+                {currFont.replace(/_/g, " ")}{" "}
                 <i className="fas fa-sort-down"></i>
               </button>
               {showFonts && (
@@ -519,7 +438,7 @@ const EditorComp = () => {
                       value={font}
                       className="font-option"
                     >
-                      {font.replace(/_/g, ' ')}
+                      {font.replace(/_/g, " ")}
                     </button>
                   ))}
                 </div>
@@ -549,7 +468,7 @@ const EditorComp = () => {
           <div className="inline-styles">
             <button
               className={`bold-btn style-btn ${
-                activeStyles.includes('BOLD') ? 'active-btn' : null
+                activeStyles.includes("BOLD") ? "active-btn" : null
               }`}
               onClick={() => onBoldclick()}
             >
@@ -558,7 +477,7 @@ const EditorComp = () => {
 
             <button
               className={`italic-btn style-btn ${
-                activeStyles.includes('ITALIC') ? 'active-btn' : null
+                activeStyles.includes("ITALIC") ? "active-btn" : null
               }`}
               onClick={onItalicClick}
             >
@@ -567,16 +486,16 @@ const EditorComp = () => {
 
             <button
               className={`underline-btn style-btn ${
-                activeStyles.includes('UNDERLINE') ? 'active-btn' : null
+                activeStyles.includes("UNDERLINE") ? "active-btn" : null
               }`}
-              style={{ textDecoration: 'underline' }}
+              style={{ textDecoration: "underline" }}
               onClick={onUnderlineClick}
             >
               <i className="fas fa-underline"></i>
             </button>
             <button
               className={`highlight-btn style-btn ${
-                activeStyles.includes('HIGHLIGHT') ? 'active-btn' : null
+                activeStyles.includes("HIGHLIGHT") ? "active-btn" : null
               }`}
               onClick={onHighlightClick}
             >
@@ -595,7 +514,7 @@ const EditorComp = () => {
                 </p>
                 <span
                   className="color-bar"
-                  style={{ background: `${currentFontColor || '#333'}` }}
+                  style={{ background: `${currentFontColor || "#333"}` }}
                 ></span>
               </button>
               {showColors && (
@@ -615,7 +534,7 @@ const EditorComp = () => {
 
             <button
               className={`code-btn style-btn ${
-                activeStyles.includes('CODE') ? 'active-btn' : null
+                activeStyles.includes("CODE") ? "active-btn" : null
               }`}
               onClick={onCodeClick}
             >
@@ -624,9 +543,9 @@ const EditorComp = () => {
 
             <button
               className={`strike-through-btn style-btn ${
-                activeStyles.includes('STRIKETHROUGH') ? 'active-btn' : null
+                activeStyles.includes("STRIKETHROUGH") ? "active-btn" : null
               }`}
-              style={{ textDecoration: 'line-through' }}
+              style={{ textDecoration: "line-through" }}
               onClick={onStrikeThroughClick}
             >
               <i className="fas fa-strikethrough"></i>
@@ -634,7 +553,7 @@ const EditorComp = () => {
 
             <button
               className={`superscript-btn style-btn ${
-                activeStyles.includes('SUPERSCRIPT') ? 'active-btn' : null
+                activeStyles.includes("SUPERSCRIPT") ? "active-btn" : null
               }`}
               onClick={onSuperScriptClick}
             >
@@ -643,7 +562,7 @@ const EditorComp = () => {
 
             <button
               className={`subscript-btn style-btn ${
-                activeStyles.includes('SUBSCRIPT') ? 'active-btn' : null
+                activeStyles.includes("SUBSCRIPT") ? "active-btn" : null
               }`}
               onClick={onSubScriptClick}
             >
@@ -651,19 +570,27 @@ const EditorComp = () => {
             </button>
           </div>
           <div className="block-styles">
-            {/* <div className="headers">
-            <button
-              className={`h1-btn style-btn ${
-                activeStyles.includes('header-one') ? 'active-btn' : null
-              }`}
-              onClick={onH1Click}
-            >
-              H1
-            </button>
-          </div> */}
+            <div className="headers">
+              <button
+                className={`title-btn style-btn ${
+                  activeStyles.includes("TITLE") ? "active-btn" : null
+                }`}
+                onClick={onTitleClick}
+              >
+                Title
+              </button>
+              <button
+                className={`subheading-btn style-btn ${
+                  activeStyles.includes("SUBHEADING") ? "active-btn" : null
+                }`}
+                onClick={onSubheadingClick}
+              >
+                Subheading
+              </button>
+            </div>
             <button
               className={`blockquote-btn style-btn ${
-                activeStyles.includes('blockquote') ? 'active-btn' : null
+                activeStyles.includes("blockquote") ? "active-btn" : null
               }`}
               onClick={onBlockquoteClick}
             >
@@ -671,7 +598,7 @@ const EditorComp = () => {
             </button>
             <button
               className={`codeblock-btn style-btn ${
-                activeStyles.includes('code-block') ? 'active-btn' : null
+                activeStyles.includes("code-block") ? "active-btn" : null
               }`}
               onClick={onCodeBlockClick}
             >
@@ -680,7 +607,7 @@ const EditorComp = () => {
 
             <button
               className={`ordered-btn style-btn ${
-                activeStyles.includes('ordered-list-item') ? 'active-btn' : null
+                activeStyles.includes("ordered-list-item") ? "active-btn" : null
               }`}
               onClick={onOLClick}
             >
@@ -688,48 +615,14 @@ const EditorComp = () => {
             </button>
             <button
               className={`unordered-btn style-btn ${
-                activeStyles.includes('unordered-list-item')
-                  ? 'active-btn'
+                activeStyles.includes("unordered-list-item")
+                  ? "active-btn"
                   : null
               }`}
               onClick={onULClick}
             >
               <i className="fas fa-list"></i>
             </button>
-            <div className="align-tools">
-              <button
-                className={`align-left style-btn ${
-                  activeStyles.includes('align-left') ? 'active-btn' : null
-                }`}
-                onClick={() => onAlignClick('align-left')}
-              >
-                <i className="fas fa-align-left"></i>
-              </button>
-              <button
-                className={`align-center style-btn ${
-                  activeStyles.includes('align-center') ? 'active-btn' : null
-                }`}
-                onClick={() => onAlignClick('align-center')}
-              >
-                <i className="fas fa-align-center"></i>
-              </button>
-              <button
-                className={`align-right style-btn ${
-                  activeStyles.includes('align-right') ? 'active-btn' : null
-                }`}
-                onClick={() => onAlignClick('align-right')}
-              >
-                <i className="fas fa-align-right"></i>
-              </button>
-              <button
-                className={`align-justify style-btn ${
-                  activeStyles.includes('align-justify') ? 'active-btn' : null
-                }`}
-                onClick={() => onAlignClick('align-justify')}
-              >
-                <i className="fas fa-align-justify"></i>
-              </button>
-            </div>
             <button
               className="style-btn add-image-btn"
               onClick={() => {
@@ -740,9 +633,6 @@ const EditorComp = () => {
               <i className="far fa-image"></i>
             </button>
           </div>
-          {/* <div className="emojis">
-            <EmojiSelect />
-          </div> */}
         </div>
       </div>
       <div className="editor-container">
@@ -753,8 +643,6 @@ const EditorComp = () => {
           customStyleMap={styleMap}
           customStyleFn={customStyleFn}
           plugins={plugins}
-          blockRendererFn={mediaBlockRenderer}
-          blockRenderMap={extendedBlockRenderMap}
           blockStyleFn={myBlockStyleFn}
           keyBindingFn={keyBindingFn}
           onChange={setEditorState}
@@ -762,25 +650,10 @@ const EditorComp = () => {
           spellCheck={true}
           ref={editorRef}
         />
-        <div className="counters-wrapper">
-          <div className="counter-container">
-            <CharCounter limit={200} /> characters
-          </div>
-          <div className="counter-container">
-            <WordCounter limit={30} /> words
-          </div>
-          <div className="counter-container">
-            <LineCounter limit={10} /> lines
-          </div>
-        </div>
-        {/* <EmojiSuggestions /> */}
         <InlineToolbar>
           {// may be use React.Fragment instead of div to improve perfomance after React 16
           externalProps => (
             <Fragment>
-              <BoldButton {...externalProps} />
-              <ItalicButton {...externalProps} />
-              <UnderlineButton {...externalProps} />
               <linkPlugin.LinkButton {...externalProps} />
             </Fragment>
           )}
@@ -818,7 +691,7 @@ const EditorComp = () => {
                     onChange={e => {
                       onImageFileChange(e);
                     }}
-                    style={{ width: '100%' }}
+                    style={{ width: "100%" }}
                   />
                 </label>
               </div>
